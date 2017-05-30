@@ -3,7 +3,7 @@ SUMMARY = "Image with weston"
 LICENSE = "MIT"
 
 inherit build_yocto
-inherit xt_quircks
+inherit xt_quirks
 
 S = "${WORKDIR}/repo"
 
@@ -21,7 +21,7 @@ SRCREV = "${AUTOREV}"
 # Renesas R-Car
 ################################################################################
 SRC_URI_rcar = "repo://github.com/xen-troops/manifests;protocol=https;branch=vgpu-dev;scmdata=keep"
-XT_QUIRCK_PATCH_SRC_URI_rcar = "file://${S}/meta-renesas/meta-rcar-gen3/docs/sample/patch/patch-for-linaro-gcc/0001-rcar-gen3-add-readme-for-building-with-Linaro-Gcc.patch;patchdir=meta-renesas"
+XT_QUIRK_PATCH_SRC_URI_rcar = "file://${S}/meta-renesas/meta-rcar-gen3/docs/sample/patch/patch-for-linaro-gcc/0001-rcar-gen3-add-readme-for-building-with-Linaro-Gcc.patch;patchdir=meta-renesas"
 XT_BB_LAYERS_FILE_rcar = "meta-demo/meta-rcar-gen3-xen/doc/bblayers.conf"
 XT_BB_LOCAL_CONF_FILE_rcar = "meta-demo/meta-rcar-gen3-xen/doc/local-wayland.conf"
 XT_BB_IMAGE_TARGET_rcar = "core-image-weston"

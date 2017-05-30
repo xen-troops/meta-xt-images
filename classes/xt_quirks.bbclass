@@ -35,7 +35,7 @@ python do_unpack_xt_extras() {
     # all the sources in SRC_URI have been unpacked already, clean it
     d.setVar("SRC_URI", "")
     # now deliver all the static extras into inner build system
-    urls = (d.getVar("XT_QUIRCK_UNPACK_SRC_URI") or "").split()
+    urls = (d.getVar("XT_QUIRK_UNPACK_SRC_URI") or "").split()
     for url in urls:
         type, _, location, _, _, _ = bb.fetch.decodeurl(url)
         item = check_url_or_pack(url, type, location, d)
@@ -45,7 +45,7 @@ python do_unpack_xt_extras() {
     bb.build.exec_func('base_do_unpack', d)
 
     # remove the archives we created
-    urls = (d.getVar("XT_QUIRCK_UNPACK_SRC_URI") or "").split()
+    urls = (d.getVar("XT_QUIRK_UNPACK_SRC_URI") or "").split()
     for url in urls:
         type, _, location, _, _, _ = bb.fetch.decodeurl(url)
         remove_tarfile(url, type, location, d)
@@ -53,6 +53,6 @@ python do_unpack_xt_extras() {
 
 python do_patch_prepend() {
     d.appendVar("SRC_URI", "\n")
-    urls = (d.getVar("XT_QUIRCK_PATCH_SRC_URI") or "").split()
-    d.appendVar("SRC_URI", d.getVar("XT_QUIRCK_PATCH_SRC_URI") or "")
+    urls = (d.getVar("XT_QUIRK_PATCH_SRC_URI") or "").split()
+    d.appendVar("SRC_URI", d.getVar("XT_QUIRK_PATCH_SRC_URI") or "")
 }
