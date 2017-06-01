@@ -38,7 +38,7 @@ python do_unpack_xt_extras() {
     urls = (d.getVar("XT_QUIRK_UNPACK_SRC_URI") or "").split()
     for url in urls:
         type, _, location, _, _, _ = bb.fetch.decodeurl(url)
-        item = check_url_or_pack(url, type, location, d)
+        item = check_url_or_pack(url, type, location, d) + " "
         d.appendVar("SRC_URI", item or "")
 
     # now call real unpacker to do the rest
