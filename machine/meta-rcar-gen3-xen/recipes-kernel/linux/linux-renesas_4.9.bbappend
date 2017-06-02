@@ -8,18 +8,18 @@ SRC_URI_append = " \
     file://defconfig \
 "
 
-SRC_URI_append_salvator-x-domx = " \
+SRC_URI_append_salvator-x-xt = " \
     file://r8a7795-salvator-x-dom0.dts;subdir=git/arch/${ARCH}/boot/dts/renesas \
     file://r8a7795-salvator-x-domu.dts;subdir=git/arch/${ARCH}/boot/dts/renesas \
 "
-SRC_URI_append_h3ulcb = ""
-SRC_URI_append_m3ulcb-domx = "file://r8a7796-m3ulcb-dom0.dts;subdir=git/arch/${ARCH}/boot/dts/renesas"
+SRC_URI_append_h3ulcb-xt = ""
+SRC_URI_append_m3ulcb-xt = "file://r8a7796-m3ulcb-dom0.dts;subdir=git/arch/${ARCH}/boot/dts/renesas"
 
 do_install_append() {
     install -d ${D}${base_prefix}/xen
 }
 
-do_install_append_salvator-x-domx() {
+do_install_append_salvator-x-xt() {
     install -m 0644 ${B}/arch/${ARCH}/boot/dts/renesas/r8a7795-salvator-x-domu.dtb ${D}${base_prefix}/xen/domu.dtb
 }
 
