@@ -1,0 +1,42 @@
+XT-images
+=========
+
+This is set of images used by Xen-troops team to build
+various configurations used for Xen [1] development and
+delivery.
+
+XT-quirks
+==========
+
+XT-quirks is a bitbake meta layer which simplifies automated
+build and deployment of images. There are number of variables
+recipes can use.
+
+XT_QUIRK_UNPACK_SRC_URI - list of URIs which are aditionally
+fetched/unpacked after base do_unpack happens.
+
+This is used to deliver additional files into the inner
+(domain's) build to tune the build. For example, to deliver
+Xen-troops additional meta layer on top of provided BSP and
+Xen-troops images [2] and customize those for a particular
+platform, one can use something like:
+APPEND_XT_QUIRK_UNPACK_SRC_URI := "file://${THISDIR}/files/meta-xt-extra;subdir=repo"
+XT_QUIRK_UNPACK_SRC_URI += "${APPEND_XT_QUIRK_UNPACK_SRC_URI}"
+
+This can also be used to deliver additional configuration and
+other files into the inner build.
+
+XT_QUIRK_PATCH_SRC_URI - list of patches do be applied after
+base do_unpack happens.
+
+This quirk is used for builds where a BSP provides additional
+patches as part of a fetched meta layer, e.g. via doc folder.
+In order to be able to patch base do_patch cannot be used as
+it relies on SRC_URI (all the patches have to be fetched first),
+but at the time of base do_fetch the patch does not exist yet.
+In order to allow that weird kind of patching this quirk
+runs after base do_fetch/do_unpack actuall deliver the patch
+onto the filesystem.
+
+[1] https://xenproject.org
+[2] https://github.com/xen-troops/meta-xt-images
