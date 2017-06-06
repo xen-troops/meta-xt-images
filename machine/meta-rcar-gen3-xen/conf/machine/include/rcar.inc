@@ -18,13 +18,6 @@ SERIAL_CONSOLE = "115200 ttySC0"
 # Configuration for kernel
 PREFERRED_PROVIDER_virtual/kernel = "linux-renesas"
 
-# Configuration for ARM Trusted Firmware
-EXTRA_IMAGEDEPENDS += " arm-trusted-firmware"
-
-# u-boot
-PREFERRED_VERSION_u-boot = "v2015.04%"
-EXTRA_IMAGEDEPENDS += " u-boot"
-
 # libdrm
 PREFERRED_VERSION_libdrm = "2.4.68"
 
