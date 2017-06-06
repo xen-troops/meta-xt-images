@@ -28,9 +28,20 @@ XT_BB_LAYERS_FILE_rcar = "meta-rcar-gen3-xen/doc/bblayers.conf"
 XT_BB_LOCAL_CONF_FILE_rcar = "meta-rcar-gen3-xen/doc/local-wayland.conf"
 XT_BB_IMAGE_TARGET_rcar = "core-image-weston"
 
-XT_QUIRK_UNPACK_SRC_URI_append_rcar = " file://meta-rcar-gen3-xen;subdir=repo"
+FILESEXTRAPATHS_prepend_rcar := "${THISDIR}/files_rcar:"
+# N.B. inner layer needs access to "inc" folder which is at its top
+FILESEXTRAPATHS_prepend_rcar := "${THISDIR}/files_rcar/meta-xt-images-extra:"
+
+XT_QUIRK_UNPACK_SRC_URI_append_rcar = "\
+    file://meta-rcar-gen3-xen;subdir=repo \
+    file://meta-xt-images-extra;subdir=repo \
+"
+
 # these layers will be added to bblayers.conf on do_configure
-XT_QUIRK_BB_ADD_LAYER_append_rcar = " meta-rcar-gen3-xen"
+XT_QUIRK_BB_ADD_LAYER_append_rcar = "\
+    meta-rcar-gen3-xen \
+    meta-xt-images-extra \
+"
 
 unpack_proprietary_rcar() {
     export PKGS_DIR="${S}/proprietary/rcar/m3_h3_gfx"
