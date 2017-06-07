@@ -18,8 +18,5 @@ SERIAL_CONSOLE = "115200 ttySC0"
 # Configuration for kernel
 PREFERRED_PROVIDER_virtual/kernel = "linux-renesas"
 
-# libdrm
-PREFERRED_VERSION_libdrm = "2.4.68"
-
 # Add variable to Build Configuration in build log
 BUILDCFG_VARS_append = " SOC_FAMILY"
