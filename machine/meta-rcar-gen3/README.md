@@ -11,7 +11,7 @@ Supported Boards/Machines
 In addition, this also provides layer that provides support board that is used
 SoCs that Renesas build. Layer and board that supports following:
 
-    * meta-rcar-gen3-xen
+    * meta-rcar-gen3
         - Xen on Renesas Electronics Corporation Salvator-X (R8A7795)
 
 Please see README in the layer directory about the description of the board.

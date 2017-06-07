@@ -24,8 +24,8 @@ SRCREV = "${AUTOREV}"
 ################################################################################
 SRC_URI_rcar = "repo://github.com/xen-troops/manifests;protocol=https;branch=vgpu-dev;scmdata=keep"
 XT_QUIRK_PATCH_SRC_URI_rcar = "file://${S}/meta-renesas/meta-rcar-gen3/docs/sample/patch/patch-for-linaro-gcc/0001-rcar-gen3-add-readme-for-building-with-Linaro-Gcc.patch;patchdir=meta-renesas"
-XT_BB_LAYERS_FILE_rcar = "meta-rcar-gen3-xen/doc/bblayers.conf"
-XT_BB_LOCAL_CONF_FILE_rcar = "meta-rcar-gen3-xen/doc/local-wayland.conf"
+XT_BB_LAYERS_FILE_rcar = "meta-rcar-gen3/doc/bblayers.conf"
+XT_BB_LOCAL_CONF_FILE_rcar = "meta-rcar-gen3/doc/local-wayland.conf"
 XT_BB_IMAGE_TARGET_rcar = "core-image-weston"
 
 FILESEXTRAPATHS_prepend_rcar := "${THISDIR}/files_rcar:"
@@ -33,13 +33,13 @@ FILESEXTRAPATHS_prepend_rcar := "${THISDIR}/files_rcar:"
 FILESEXTRAPATHS_prepend_rcar := "${THISDIR}/files_rcar/meta-xt-images-extra:"
 
 XT_QUIRK_UNPACK_SRC_URI_append_rcar = "\
-    file://meta-rcar-gen3-xen;subdir=repo \
+    file://meta-rcar-gen3;subdir=repo \
     file://meta-xt-images-extra;subdir=repo \
 "
 
 # these layers will be added to bblayers.conf on do_configure
 XT_QUIRK_BB_ADD_LAYER_append_rcar = "\
-    meta-rcar-gen3-xen \
+    meta-rcar-gen3 \
     meta-xt-images-extra \
 "
 
