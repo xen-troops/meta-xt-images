@@ -17,7 +17,7 @@ Maintainers List (try to look for most precise areas first)
 		-----------------------------------
 Xen on Renesas ARM SoCs R-Car Generation 3
 M:	Iurii Konovalenko <iurii.konovalenko@globallogic.com>
-F:	meta-rcar-gen3-xen
+F:	meta-rcar-gen3
 
 COMMON
 M:	Takeshi Saito <takeshi.saito.xv@renesas.com>
