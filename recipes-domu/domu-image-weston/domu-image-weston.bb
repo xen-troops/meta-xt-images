@@ -4,6 +4,7 @@ LICENSE = "MIT"
 
 inherit build_yocto
 inherit xt_quirks
+require inc/xt_rcar.inc
 
 S = "${WORKDIR}/repo"
 # path for machine specific layers and recipes
@@ -32,17 +33,8 @@ XT_QUIRK_UNPACK_SRC_URI_append_rcar = " file://meta-rcar-gen3;subdir=repo"
 # these layers will be added to bblayers.conf on do_configure
 XT_QUIRK_BB_ADD_LAYER_append_rcar = " meta-rcar-gen3"
 
-unpack_proprietary_rcar() {
-    export PKGS_DIR="${S}/proprietary/rcar/m3_h3_gfx"
-    cd ${PKGS_DIR}
-    unzip -oq R-Car_Gen3_Series_Evaluation_Software_Package_for_Linux-*.zip
-    unzip -oq R-Car_Gen3_Series_Evaluation_Software_Package_of_Linux_Drivers-*.zip
-    cd ${S}/meta-renesas
-    sh meta-rcar-gen3/docs/sample/copyscript/copy_evaproprietary_softwares.sh -f $PKGS_DIR
-}
-
 python do_unpack_append_rcar() {
-    bb.build.exec_func('unpack_proprietary_rcar', d)
+    bb.build.exec_func('rcar_unpack_evaproprietary', d)
 }
 
 ################################################################################
