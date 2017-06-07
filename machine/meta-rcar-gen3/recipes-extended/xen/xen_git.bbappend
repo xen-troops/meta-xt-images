@@ -10,15 +10,6 @@ PACKAGECONFIG ?= " \
     ${@bb.utils.contains('XEN_TARGET_ARCH', 'x86_64', 'hvm', '', d)} \
     "
 
-XEN_REL="4.9"
-
-SRC_URI = " \
-    git://github.com/xen-troops/xen.git;protocol=http;branch=vgpu-dev \
-    "
-SRCREV = "${AUTOREV}"
-
-FLASK_POLICY_FILE="xenpolicy-4.9-rc"
-
 EXTRA_OEMAKE += " CONFIG_HAS_SCIF=y CONFIG_QEMU_XEN=n"
 
 RDEPENDS_${PN}-base += "\
@@ -78,9 +69,3 @@ RDEPENDS_${PN}-efi = " \
     bash \
     python \
     "
-
-do_deploy_append () {
-    if [ -f ${D}/boot/xen ]; then
-        uboot-mkimage -A arm64 -C none -T kernel -a 0x78080000 -e 0x78080000 -n "XEN" -d ${D}/boot/xen ${DEPLOYDIR}/xen-${MACHINE}.uImage
-    fi
-}
