@@ -55,4 +55,10 @@ python do_patch_prepend() {
     d.appendVar("SRC_URI", "\n")
     urls = (d.getVar("XT_QUIRK_PATCH_SRC_URI") or "").split()
     d.appendVar("SRC_URI", d.getVar("XT_QUIRK_PATCH_SRC_URI") or "")
+    try:
+        fetcher = bb.fetch2.Fetch(urls, d)
+        fetcher.download()
+    except bb.fetch2.BBFetchException as e:
+        bb.fatal(str(e))
+
 }
