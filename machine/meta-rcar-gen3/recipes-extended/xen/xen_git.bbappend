@@ -69,3 +69,7 @@ RDEPENDS_${PN}-efi = " \
     bash \
     python \
     "
+
+RDEPENDS_${PN}-base += " \
+    ${PN}-xenstat \
+    "
