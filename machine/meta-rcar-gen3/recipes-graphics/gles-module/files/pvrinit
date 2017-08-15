@@ -1,0 +1,90 @@
+#!/bin/sh
+############################################################################ ###
+# File rc.pvr
+# Copyright Copyright (C) 2013-2016 Renesas Electronics Corporation
+# License Strictly Confidential.
+#### ###########################################################################
+
+# Auto-generated for r8a7796_linux from rogueddk_1.7@4495854
+#
+
+load_pvr()
+{
+        # Load the PVR Services module.
+        #
+        if ! /sbin/modprobe -q pvrsrvkm $PVR_SRVKM_PARAMS; then
+                echo "Module pvrsrvkm failed to load. Retrying."
+                if [ -z $depmod_has_been_run ]; then
+                        if [ -e /sbin/depmod ]; then
+                                echo "Running /sbin/depmod"
+                                /sbin/depmod && depmod_has_been_run=1
+                        fi
+                fi
+                if ! /sbin/modprobe -q pvrsrvkm $PVR_SRVKM_PARAMS ; then return; fi
+        fi
+                
+        
+                # Load 3rd party module(s).
+        #
+                        # powervr.ini parser
+        if [ -e /etc/powervr.ini ]; then
+                eval `sed -e 's/:space:*\=:space:*/=/g' \
+                -e 's/;.*$//' \
+                -e 's/:/_/g' \
+                -e 's/:space:*$//' \
+                -e 's/^:space:*//' \
+                -e "s/^\(.*\)=\([^\"']*\)$/\1=\"\2\"/" \
+                < /etc/powervr.ini \
+                | sed -n -e "/^\[default\]/,/^\s*\[/{/^[^;].*\=.*/p;}"`
+                # save params
+                if [ ! ${EnableAPM} = "" ]; then
+                        echo $EnableAPM > /sys/kernel/debug/pvr/apphint/EnableAPM
+                else
+                        echo 0 > /sys/kernel/debug/pvr/apphint/EnableAPM
+                fi
+        fi
+
+        echo "Loaded PowerVR consumer services."
+        return 0;
+}
+
+unload_pvr()
+{
+        # Stop the DRM Layer Compositor REL.
+        if ! /usr/local/bin/dlcsrv_REL -q ; then return; fi
+        
+        # Unload 3rd party module(s).
+        #
+ 
+        # Unload the PVR Services module.
+        #
+        if /sbin/modprobe -r pvrsrvkm; then :; else return 1; fi
+        
+        echo "Unloaded PowerVR consumer services."
+        return 0;
+}
+
+# Deal with the type of invocation we get.
+#
+case "$1" in
+"start")
+        load_pvr
+        ;;
+stop)
+        if ! unload_pvr; then
+                echo "Couldn't unload modules" >&2;
+                exit 1
+        fi
+        ;;
+reload|restart)
+        if unload_pvr; then
+                load_pvr
+        else
+                echo "Couldn't unload modules" >&2;
+                exit 1
+        fi
+        ;;
+*)
+        echo "$0: unknown argument $1." >&2;
+        ;;
+esac
