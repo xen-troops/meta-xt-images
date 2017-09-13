@@ -1,8 +1,9 @@
-#Add Xen to build
+#Add Xen and additional packages to build
 IMAGE_INSTALL_append = " \
     xen-base \
     xen-flask \
     xen-xenstat \
+    pulseaudio \
 "
 
 # Configuration for ARM Trusted Firmware
