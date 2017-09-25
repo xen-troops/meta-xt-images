@@ -31,6 +31,7 @@ SRCREV = "${AUTOREV}"
 ################################################################################
 # Renesas R-Car
 ################################################################################
-XT_QUIRK_UNPACK_SRC_URI_append_rcar = " file://meta-rcar-gen3;subdir=repo"
+XT_QUIRK_UNPACK_SRC_URI_append_rcar = " \
+    file://meta-xt-images-rcar-gen3;subdir=repo"
 # these layers will be added to bblayers.conf on do_configure
-XT_QUIRK_BB_ADD_LAYER_append_rcar = " meta-rcar-gen3"
+XT_QUIRK_BB_ADD_LAYER_append_rcar = " meta-xt-images-rcar-gen3"
