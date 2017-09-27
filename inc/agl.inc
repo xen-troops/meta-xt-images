@@ -13,10 +13,16 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/../machine:"
 # path for machine non-specific recipes
 FILESEXTRAPATHS_prepend := "${THISDIR}/../recipes-domx:"
 
-XT_QUIRK_UNPACK_SRC_URI += "file://meta-xt-images-domx;subdir=repo"
+XT_QUIRK_UNPACK_SRC_URI += " \
+    file://meta-xt-images-domx;subdir=repo \
+    file://meta-xt-images-vgpu;subdir=repo \
+"
 
 # these layers will be added to bblayers.conf on do_configure
-XT_QUIRK_BB_ADD_LAYER += " meta-xt-images-domx"
+XT_QUIRK_BB_ADD_LAYER += " \
+    meta-xt-images-domx \
+    meta-xt-images-vgpu \
+"
 
 ################################################################################
 # set to AUTOREV so we can override this while reconstructing this build with
