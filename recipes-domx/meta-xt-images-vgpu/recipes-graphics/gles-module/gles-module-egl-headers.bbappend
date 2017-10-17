@@ -2,6 +2,8 @@ S = "${WORKDIR}/git"
 
 do_install() {
     # Install header files
+    install -d ${STAGING_DIR_TARGET}/${includedir}/CL
+    install -m 644 ${S}/include/khronos/CL/*.h ${STAGING_DIR_TARGET}/${includedir}/CL/
     install -d ${STAGING_DIR_TARGET}/${includedir}/EGL
     install -m 644 ${S}/include/khronos/EGL/*.h ${STAGING_DIR_TARGET}/${includedir}/EGL/
     install -d ${STAGING_DIR_TARGET}/${includedir}/GLES2

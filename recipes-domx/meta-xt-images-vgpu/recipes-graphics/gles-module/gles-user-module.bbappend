@@ -6,19 +6,20 @@ COMPILER_URL = "${TOPDIR}/../proprietary/rcar/meta/META_Embedded_Toolkit_2.8.1.0
 SRC_URI_remove = " \
     file://change-shell.patch \
 "
-
 SRC_URI_append = " \
     file://${COMPILER_URL} \
     file://pvr-addons/etc/powervr.ini \
     file://pvr-addons/lib/pkgconfig/egl.pc \
     file://pvr-addons/lib/pkgconfig/glesv2.pc \
     file://rcpvr-change-shell.patch \
+    file://gcc_6_enable_c11.patch \
 "
 
 PVRUM_DISCIMAGE = "${D}"
-
+DEPENDS += "virtual/kernel llvmpvr wayland-kms"
 BUILD = "release"
-
+PROVIDES += "virtual/opencl libopencl"
+RPROVIDES_${PN} += "libopencl"
 S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE += "CROSS_COMPILE=${TARGET_PREFIX}"
@@ -26,6 +27,7 @@ EXTRA_OEMAKE += "PVR_BUILD_DIR=${PVRUM_BUILD_DIR}"
 EXTRA_OEMAKE += "DISCIMAGE=${PVRUM_DISCIMAGE}"
 EXTRA_OEMAKE += "KERNELDIR=${STAGING_KERNEL_BUILDDIR}"
 EXTRA_OEMAKE += "METAG_INST_ROOT=${S}/metag/2.8"
+EXTRA_OEMAKE += "LLVM_BUILD_DIR=${STAGING_LIBDIR}/llvm_build_dir"
 
 # Need to actually delete the varflag not just unset it.
 python __anonymous() {
@@ -42,6 +44,10 @@ do_configure_prepend() {
         rm -rf ${S}/Meta_Embedded_Toolkit-2.8.1.CentOS-5
     fi
 }
+
+# It is not enough just adding dependency on virtual/kernel
+# https://stackoverflow.com/questions/34793697/how-to-write-a-bitbake-driver-recipe-which-requires-kernel-source-header-files
+do_compile[depends] += "linux-renesas:do_shared_workdir"
 
 do_install() {
     oe_runmake install
@@ -76,4 +82,3 @@ FILES_${PN} += " \
 "
 
 INSANE_SKIP_${PN} += "dev-so"
-
