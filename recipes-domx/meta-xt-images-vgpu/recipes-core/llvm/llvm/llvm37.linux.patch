@@ -1,0 +1,57 @@
+--- a/Makefile
++++ b/Makefile
+@@ -51,8 +51,24 @@
+   DIRS := $(filter-out docs, $(DIRS))
+ endif
+ 
++ifeq ($(MAKECMDGOALS),clang-libs-only)
++  DIRS :=
++  OPTIONAL_DIRS :=
++endif
++
++ifeq ($(MAKECMDGOALS),llvm-and-clang-libs)
++  DIRS := $(filter-out tools docs unittests,$(subst utils,utils/TableGen,$(DIRS)))
++ifeq ($(LLVM_CROSS_COMPILING),1)
++  DIRS := $(filter-out utils/TableGen tools/llvm-config,$(DIRS))
++endif
++  OPTIONAL_DIRS :=
++endif
++
+ ifeq ($(MAKECMDGOALS),libs-only)
+-  DIRS := $(filter-out tools docs, $(DIRS))
++  DIRS := $(filter-out tools docs unittests,$(subst utils,utils/TableGen,$(DIRS)))
++ifeq ($(LLVM_CROSS_COMPILING),1)
++  DIRS := $(filter-out utils/TableGen tools/llvm-config,$(DIRS))
++endif
+   OPTIONAL_DIRS :=
+ endif
+ 
+@@ -175,6 +191,9 @@
+ 
+ clang-only: all
+ tools-only: all
++clang-libs-only:
++	@($(MAKE) -C $(LEVEL)/tools/clang/ libs-only ) || exit 1
++llvm-and-clang-libs: libs-only clang-libs-only
+ libs-only: all
+ install-clang: install
+ install-libs: install
+--- a/lib/Transforms/CMakeLists.txt
++++ b/lib/Transforms/CMakeLists.txt
+@@ -4,5 +4,4 @@ add_subdirectory(InstCombine)
+ add_subdirectory(Scalar)
+ add_subdirectory(IPO)
+ add_subdirectory(Vectorize)
+-add_subdirectory(Hello)
+ add_subdirectory(ObjCARC)
+--- a/lib/Transforms/Makefile
++++ b/lib/Transforms/Makefile
+@@ -8,7 +8,7 @@
+ ##===----------------------------------------------------------------------===##
+ 
+ LEVEL = ../..
+-PARALLEL_DIRS = Utils Instrumentation Scalar InstCombine IPO Vectorize Hello ObjCARC
++PARALLEL_DIRS = Utils Instrumentation Scalar InstCombine IPO Vectorize ObjCARC
+ 
+ include $(LEVEL)/Makefile.config
+ 

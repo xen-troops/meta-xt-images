@@ -1,0 +1,28 @@
+--- a/tools/clang/Makefile
++++ b/tools/clang/Makefile
+@@ -29,10 +29,6 @@
+   ENABLE_CLANG_EXAMPLES := 0
+ endif
+ 
+-ifeq ($(MAKECMDGOALS),libs-only)
+-  DIRS := $(filter-out tools docs, $(DIRS))
+-  OPTIONAL_DIRS :=
+-endif
+ ifeq ($(BUILD_CLANG_ONLY),YES)
+   DIRS := $(filter-out docs unittests, $(DIRS))
+   OPTIONAL_DIRS :=
+@@ -47,6 +43,14 @@
+ # Include LLVM common makefile.
+ include $(LEVEL)/Makefile.common
+ 
++ifeq ($(MAKECMDGOALS),libs-only)
++  DIRS := $(filter-out tools docs unittests,$(DIRS))
++ifeq ($(LLVM_CROSS_COMPILING),1)
++  DIRS := $(filter-out utils/TableGen,$(DIRS))
++endif
++  OPTIONAL_DIRS :=
++endif
++
+ ifneq ($(ENABLE_DOCS),1)
+   DIRS := $(filter-out docs, $(DIRS))
+ endif
