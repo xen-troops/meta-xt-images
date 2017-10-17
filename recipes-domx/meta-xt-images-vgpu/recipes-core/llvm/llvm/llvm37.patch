@@ -1,0 +1,805 @@
+diff --git Makefile Makefile
+index 2b9468a..5026e04 100644
+--- a/Makefile
++++ b/Makefile
+@@ -112,11 +112,11 @@ cross-compile-build-tools:
+ 	  cd BuildTools ; \
+ 	  unset CFLAGS ; \
+ 	  unset CXXFLAGS ; \
+-	  AR=$(BUILD_AR) ; \
+-	  AS=$(BUILD_AS) ; \
+-	  LD=$(BUILD_LD) ; \
+-	  CC=$(BUILD_CC) ; \
+-	  CXX=$(BUILD_CXX) ; \
++	  AR="$(BUILD_AR)" ; \
++	  AS="$(BUILD_AS)" ; \
++	  LD="$(BUILD_LD)" ; \
++	  CC="$(BUILD_CC)" ; \
++	  CXX="$(BUILD_CXX)" ; \
+ 	  unset SDKROOT ; \
+ 	  unset UNIVERSAL_SDK_PATH ; \
+ 	  configure_opts= ; \
+diff --git configure configure
+index c562f83..0bd4a66 100755
+--- a/configure
++++ b/configure
+@@ -5633,6 +5633,7 @@ if test "$enableval" = host-only ; then
+   enableval=host
+ fi
+ case "$enableval" in
++  none) TARGETS_TO_BUILD="" ;;
+   all) TARGETS_TO_BUILD="$ALL_TARGETS" ;;
+   *)for a_target in `echo $enableval|sed -e 's/,/ /g' ` ; do
+       case "$a_target" in
+diff --git include/llvm/ADT/Triple.h include/llvm/ADT/Triple.h
+index 947812d..754c1ba 100644
+--- a/include/llvm/ADT/Triple.h
++++ b/include/llvm/ADT/Triple.h
+@@ -69,6 +69,8 @@ public:
+     systemz,    // SystemZ: s390x
+     tce,        // TCE (http://tce.cs.tut.fi/): tce
+     thumb,      // Thumb (little endian): thumb, thumbv.*
++    usc,     // The UniFlex generator
++    usc64,   // The UniFlex generator for 64-bits
+     thumbeb,    // Thumb (big endian): thumbeb
+     x86,        // X86: i[3-9]86
+     x86_64,     // X86-64: amd64, x86_64
+diff --git include/llvm/IR/Intrinsics.td include/llvm/IR/Intrinsics.td
+index bbae720..215c27e 100644
+--- a/include/llvm/IR/Intrinsics.td
++++ b/include/llvm/IR/Intrinsics.td
+@@ -649,3 +649,4 @@ include "llvm/IR/IntrinsicsAMDGPU.td"
+ include "llvm/IR/IntrinsicsBPF.td"
+ include "llvm/IR/IntrinsicsSystemZ.td"
+ include "llvm/IR/IntrinsicsWebAssembly.td"
++include "llvm/IR/IntrinsicsUSC.td"
+diff --git include/llvm/IR/IntrinsicsUSC.td include/llvm/IR/IntrinsicsUSC.td
+new file mode 100644
+index 0000000..4315f05
+--- /dev/null
++++ b/include/llvm/IR/IntrinsicsUSC.td
+@@ -0,0 +1,122 @@
++/*************************************************************************/ /*!
++@File           InstrinsicsUSC.td
++@Title          Table descriptor for the USC intrinsics
++@Copyright      Copyright (c) Imagination Technologies Ltd. All Rights Reserved
++@Description    Table descriptor for the USC intrinsics
++@License        Strictly Confidential.
++*/ /**************************************************************************/
++
++// Syntax:
++// Intrinsic<[return_type], [arg0_type, arg1_type, argn_type], [flag0, flag1, flagn], "llvm.usc.intrinsic_name">
++// Specifying flags and (trailing) builtin name are optional
++// All intrinsic names must start with "llvm.usc."!
++// For intrinsics with an unsigned version, prepend "u" to the name
++// The name must be sequential with NO underscores or dots as it will break mangling parsing
++
++
++let TargetPrefix = "usc" in
++{
++	def int_usc_abs:           Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>],                          [IntrNoMem]>;
++	def int_usc_addh:          Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_uaddh:         Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_addl:          Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_uaddl:         Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_addsat:        Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_uaddsat:       Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_atan:          Intrinsic<[llvm_anyfloat_ty],  [LLVMMatchType<0>],                          [IntrNoMem]>;
++	def int_usc_ceil:          Intrinsic<[llvm_anyfloat_ty],  [LLVMMatchType<0>],                          [IntrNoMem]>;
++	def int_usc_cross:         Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_dot:           Intrinsic<[llvm_float_ty],     [llvm_anyfloat_ty, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_doth:          Intrinsic<[llvm_half_ty],      [llvm_anyfloat_ty, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_dFdx:          Intrinsic<[llvm_anyfloat_ty],  [LLVMMatchType<0>],                          [IntrNoMem]>;
++	def int_usc_dFdy:          Intrinsic<[llvm_anyfloat_ty],  [LLVMMatchType<0>],                          [IntrNoMem]>;
++	def int_usc_frac:          Intrinsic<[llvm_anyfloat_ty],  [LLVMMatchType<0>],                          [IntrNoMem]>;
++	def int_usc_ftb:           Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>],                          [IntrNoMem]>;
++	def int_usc_isnan:         Intrinsic<[llvm_i1_ty],        [llvm_float_ty],                             [IntrNoMem]>;
++	def int_usc_madh:          Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
++	def int_usc_umadh:         Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
++	def int_usc_madl:          Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
++	def int_usc_umadl:         Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
++	def int_usc_madsat:        Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
++	def int_usc_umadsat:       Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
++	def int_usc_max:           Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_umax:          Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_min:           Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_umin:          Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_mulh:          Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_umulh:         Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_mull:          Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_umull:         Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_neg:           Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>],                          [IntrNoMem]>;
++	def int_usc_recip:         Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>],                          [IntrNoMem]>;
++	def int_usc_rotate:        Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_rsqrt:         Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>],                          [IntrNoMem]>;
++	def int_usc_subh:          Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_usubh:         Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_subl:          Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_usubl:         Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_subsat:        Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++	def int_usc_usubsat:       Intrinsic<[llvm_anyint_ty],    [LLVMMatchType<0>, LLVMMatchType<0>],        [IntrNoMem]>;
++
++// Work item related intrinsics
++	def int_usc_ugetglobalsize:   Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_ugetglobalid:     Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_ugetglobaloffset: Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_ugetlocalsize:    Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_ugetgroupid:      Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_ugetlocalid:      Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]>;
++
++// Async memory copy
++	def int_usc_asynccopy: Intrinsic<[llvm_i32_ty], [llvm_anyptr_ty, llvm_anyptr_ty, llvm_i32_ty], [IntrReadWriteArgMem, NoCapture<1>]>;
++
++// The Saturate intrinsic is special cased: there is no reliable way to indicate that the argument
++// to the intrinsic must be twice the bit width of the destination, so we have to overload it explicitly
++	def int_usc_dsat32: Intrinsic<[llvm_i16_ty], [llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_dsat16: Intrinsic<[llvm_i8_ty],  [llvm_i16_ty], [IntrNoMem]>;
++	def int_usc_usat32: Intrinsic<[llvm_i16_ty], [llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_usat16: Intrinsic<[llvm_i8_ty],  [llvm_i16_ty], [IntrNoMem]>;
++	def int_usc_sat32:  Intrinsic<[llvm_i16_ty], [llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_sat16:  Intrinsic<[llvm_i8_ty],  [llvm_i16_ty], [IntrNoMem]>;
++
++// Describes a burst-store
++	def int_usc_burststore: Intrinsic<[], [llvm_anyptr_ty, llvm_i32_ty, llvm_i32_ty, llvm_anyvector_ty], [IntrReadWriteArgMem, NoCapture<0>]>;
++// Describes a burst-load
++	def int_usc_burstload: Intrinsic<[llvm_anyvector_ty], [llvm_anyptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadArgMem, NoCapture<0>]>;
++
++// Local memory aliasing
++	def int_usc_alias: Intrinsic<[llvm_anyvector_ty], [llvm_anyptr_ty], [NoCapture<1>]>;
++
++// Pack: converts a float vector into a i32; the size of the integers is the 2nd argument: 8 or 16
++	def int_usc_pack:  Intrinsic<[llvm_anyint_ty], [llvm_anyfloat_ty, llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_packu: Intrinsic<[llvm_anyint_ty], [llvm_anyfloat_ty, llvm_i32_ty], [IntrNoMem]>;
++// Scaled versions
++	def int_usc_packscale:  Intrinsic<[llvm_anyint_ty], [llvm_anyfloat_ty, llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_packscaleu: Intrinsic<[llvm_anyint_ty], [llvm_anyfloat_ty, llvm_i32_ty], [IntrNoMem]>;
++
++// Unpack: converts a i32 to a vector of floats; src integer size is the 2nd argument: 8 or 16
++	def int_usc_unpack:  Intrinsic<[llvm_anyfloat_ty], [llvm_anyint_ty, llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_unpacku: Intrinsic<[llvm_anyfloat_ty], [llvm_anyint_ty, llvm_i32_ty], [IntrNoMem]>;
++// Scaled versions
++	def int_usc_unpackscale:  Intrinsic<[llvm_anyfloat_ty], [llvm_anyint_ty, llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_unpackscaleu: Intrinsic<[llvm_anyfloat_ty], [llvm_anyint_ty, llvm_i32_ty], [IntrNoMem]>;
++
++// The intrinsic to mark a local buffer as spilled
++	def int_usc_spill: Intrinsic<[llvm_anyptr_ty], [llvm_anyptr_ty, llvm_i32_ty], [IntrNoMem, NoCapture<1>]>;
++
++// The Intrinsics to handle Bit-String operations.
++	// Bit revertse
++	def int_usc_bitrev: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], [IntrNoMem]>;
++	// bitfield insert
++	def int_usc_bfi: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
++	// Signed/unsigned bit field extract
++	def int_usc_ibfe: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
++	def int_usc_ubfe: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, LLVMMatchType<0>, LLVMMatchType<0>], [IntrNoMem]>;
++	// bitfield insert
++	def int_usc_bfi_glcommon: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
++	// Signed/unsigned bit field extract
++	def int_usc_ibfe_glcommon: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
++	def int_usc_ubfe_glcommon: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
++
++	// Signed count leading zeros
++	def int_usc_ctlzs: Intrinsic<[llvm_anyvector_ty], [LLVMMatchType<0>], [IntrNoMem]>;
++}
+diff --git include/llvm/IR/Operator.h include/llvm/IR/Operator.h
+index 372b254..4f96d7f 100644
+--- a/include/llvm/IR/Operator.h
++++ b/include/llvm/IR/Operator.h
+@@ -173,7 +173,9 @@ public:
+     NoNaNs          = (1 << 1),
+     NoInfs          = (1 << 2),
+     NoSignedZeros   = (1 << 3),
+-    AllowReciprocal = (1 << 4)
++    AllowReciprocal = (1 << 4),
++    MediumPrecision = (1 << 5),
++    Precise         = (1 << 6),
+   };
+ 
+   FastMathFlags() : Flags(0)
+@@ -191,6 +193,8 @@ public:
+   bool noSignedZeros() const   { return 0 != (Flags & NoSignedZeros); }
+   bool allowReciprocal() const { return 0 != (Flags & AllowReciprocal); }
+   bool unsafeAlgebra() const   { return 0 != (Flags & UnsafeAlgebra); }
++  bool isMediumPrecision() const { return 0 != (Flags & MediumPrecision); }
++  bool isPrecise() const       { return 0 != (Flags & Precise); }
+ 
+   /// Flag setters
+   void setNoNaNs()          { Flags |= NoNaNs; }
+@@ -204,6 +208,8 @@ public:
+     setNoSignedZeros();
+     setAllowReciprocal();
+   }
++  void setMediumPrecision() { Flags |= MediumPrecision; }
++  void setPrecise()         { Flags |= Precise; }
+ 
+   void operator&=(const FastMathFlags &OtherFlags) {
+     Flags &= OtherFlags.Flags;
+@@ -294,6 +300,14 @@ public:
+     return (SubclassOptionalData & FastMathFlags::AllowReciprocal) != 0;
+   }
+ 
++  bool hasMediumPrecision() const {
++    return (SubclassOptionalData & FastMathFlags::MediumPrecision) != 0;
++  }
++
++  bool hasPrecise() const {
++	  return (SubclassOptionalData & FastMathFlags::Precise) != 0;
++  }
++
+   /// Convenience function for getting all the fast-math flags
+   FastMathFlags getFastMathFlags() const {
+     return FastMathFlags(SubclassOptionalData);
+diff --git include/llvm/Support/Valgrind.h include/llvm/Support/Valgrind.h
+index cebf75c..da5a4d1 100644
+--- a/include/llvm/Support/Valgrind.h
++++ b/include/llvm/Support/Valgrind.h
+@@ -20,17 +20,6 @@
+ #include "llvm/Support/Compiler.h"
+ #include <stddef.h>
+ 
+-#if LLVM_ENABLE_THREADS != 0 && !defined(NDEBUG)
+-// tsan (Thread Sanitizer) is a valgrind-based tool that detects these exact
+-// functions by name.
+-extern "C" {
+-void AnnotateHappensAfter(const char *file, int line, const volatile void *cv);
+-void AnnotateHappensBefore(const char *file, int line, const volatile void *cv);
+-void AnnotateIgnoreWritesBegin(const char *file, int line);
+-void AnnotateIgnoreWritesEnd(const char *file, int line);
+-}
+-#endif
+-
+ namespace llvm {
+ namespace sys {
+   // True if Valgrind is controlling this process.
+@@ -40,33 +29,10 @@ namespace sys {
+   // Otherwise valgrind may continue to execute the old version of the code.
+   void ValgrindDiscardTranslations(const void *Addr, size_t Len);
+ 
+-#if LLVM_ENABLE_THREADS != 0 && !defined(NDEBUG)
+-  // Thread Sanitizer is a valgrind tool that finds races in code.
+-  // See http://code.google.com/p/data-race-test/wiki/DynamicAnnotations .
+-
+-  // This marker is used to define a happens-before arc. The race detector will
+-  // infer an arc from the begin to the end when they share the same pointer
+-  // argument.
+-  #define TsanHappensBefore(cv) \
+-    AnnotateHappensBefore(__FILE__, __LINE__, cv)
+-
+-  // This marker defines the destination of a happens-before arc.
+-  #define TsanHappensAfter(cv) \
+-    AnnotateHappensAfter(__FILE__, __LINE__, cv)
+-
+-  // Ignore any races on writes between here and the next TsanIgnoreWritesEnd.
+-  #define TsanIgnoreWritesBegin() \
+-    AnnotateIgnoreWritesBegin(__FILE__, __LINE__)
+-
+-  // Resume checking for racy writes.
+-  #define TsanIgnoreWritesEnd() \
+-    AnnotateIgnoreWritesEnd(__FILE__, __LINE__)
+-#else
+   #define TsanHappensBefore(cv)
+   #define TsanHappensAfter(cv)
+   #define TsanIgnoreWritesBegin()
+   #define TsanIgnoreWritesEnd()
+-#endif
+ }
+ }
+ 
+diff --git lib/Analysis/TargetLibraryInfo.cpp lib/Analysis/TargetLibraryInfo.cpp
+index 635c50c..20ebbd3 100644
+--- a/lib/Analysis/TargetLibraryInfo.cpp
++++ b/lib/Analysis/TargetLibraryInfo.cpp
+@@ -61,6 +61,10 @@ static void initialize(TargetLibraryInfoImpl &TLI, const Triple &T,
+   }
+ #endif // !NDEBUG
+ 
++  if (T.getArch() == Triple::usc || T.getArch() == Triple::usc64 || T.getArch() == Triple::UnknownArch) {
++      TLI.disableAllFunctions();
++  }
++  
+   // There are no library implementations of mempcy and memset for AMD gpus and
+   // these can be difficult to lower in the backend.
+   if (T.getArch() == Triple::r600 ||
+diff --git lib/IR/LegacyPassManager.cpp lib/IR/LegacyPassManager.cpp
+index 27d98a2..cf720ec 100644
+--- a/lib/IR/LegacyPassManager.cpp
++++ b/lib/IR/LegacyPassManager.cpp
+@@ -666,7 +666,7 @@ void PMTopLevelManager::schedulePass(Pass *P) {
+     return;
+   }
+ 
+-  if (PI && !PI->isAnalysis() && ShouldPrintBeforePass(PI)) {
++  if ((!PI && PrintBeforeAll) || (PI && !PI->isAnalysis() && ShouldPrintBeforePass(PI))) {
+     Pass *PP = P->createPrinterPass(
+       dbgs(), std::string("*** IR Dump Before ") + P->getPassName() + " ***");
+     PP->assignPassManager(activeStack, getTopLevelPassManagerType());
+@@ -675,7 +675,7 @@ void PMTopLevelManager::schedulePass(Pass *P) {
+   // Add the requested pass to the best available pass manager.
+   P->assignPassManager(activeStack, getTopLevelPassManagerType());
+ 
+-  if (PI && !PI->isAnalysis() && ShouldPrintAfterPass(PI)) {
++  if ((!PI && PrintAfterAll) || (PI && !PI->isAnalysis() && ShouldPrintAfterPass(PI))) {
+     Pass *PP = P->createPrinterPass(
+       dbgs(), std::string("*** IR Dump After ") + P->getPassName() + " ***");
+     PP->assignPassManager(activeStack, getTopLevelPassManagerType());
+diff --git lib/Support/Triple.cpp lib/Support/Triple.cpp
+index c6646fb..fad9fbb 100644
+--- a/lib/Support/Triple.cpp
++++ b/lib/Support/Triple.cpp
+@@ -45,6 +45,8 @@ const char *Triple::getArchTypeName(ArchType Kind) {
+   case tce:         return "tce";
+   case thumb:       return "thumb";
+   case thumbeb:     return "thumbeb";
++  case usc:     return "usc";
++  case usc64:   return "usc64";
+   case x86:         return "i386";
+   case x86_64:      return "x86_64";
+   case xcore:       return "xcore";
+@@ -244,6 +246,8 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
+     .Case("tce", tce)
+     .Case("thumb", thumb)
+     .Case("thumbeb", thumbeb)
++    .Case("usc", usc)
++    .Case("usc64", usc64)
+     .Case("x86", x86)
+     .Case("x86-64", x86_64)
+     .Case("xcore", xcore)
+@@ -362,6 +366,8 @@ static Triple::ArchType parseArch(StringRef ArchName) {
+     .Case("amdil64", Triple::amdil64)
+     .Case("hsail", Triple::hsail)
+     .Case("hsail64", Triple::hsail64)
++    .Case("usc", Triple::usc)
++    .Case("usc64", Triple::usc64)
+     .Case("spir", Triple::spir)
+     .Case("spir64", Triple::spir64)
+     .StartsWith("kalimba", Triple::kalimba)
+@@ -1010,6 +1016,7 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
+   case llvm::Triple::tce:
+   case llvm::Triple::thumb:
+   case llvm::Triple::thumbeb:
++  case llvm::Triple::usc:
+   case llvm::Triple::x86:
+   case llvm::Triple::xcore:
+   case llvm::Triple::amdil:
+@@ -1038,6 +1045,7 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
+   case llvm::Triple::hsail64:
+   case llvm::Triple::spir64:
+   case llvm::Triple::wasm64:
++  case llvm::Triple::usc64:
+     return 64;
+   }
+   llvm_unreachable("Invalid architecture value");
+@@ -1088,6 +1096,7 @@ Triple Triple::get32BitArchVariant() const {
+   case Triple::tce:
+   case Triple::thumb:
+   case Triple::thumbeb:
++  case Triple::usc:
+   case Triple::x86:
+   case Triple::xcore:
+   case Triple::shave:
+@@ -1106,6 +1115,7 @@ Triple Triple::get32BitArchVariant() const {
+   case Triple::hsail64:   T.setArch(Triple::hsail);   break;
+   case Triple::spir64:    T.setArch(Triple::spir);    break;
+   case Triple::wasm64:    T.setArch(Triple::wasm32);  break;
++  case Triple::usc64:     T.setArch(Triple::usc);    break;
+   }
+   return T;
+ }
+@@ -1147,6 +1157,7 @@ Triple Triple::get64BitArchVariant() const {
+   case Triple::systemz:
+   case Triple::x86_64:
+   case Triple::wasm64:
++  case Triple::usc64:
+     // Already 64-bit.
+     break;
+ 
+@@ -1161,6 +1172,7 @@ Triple Triple::get64BitArchVariant() const {
+   case Triple::hsail:   T.setArch(Triple::hsail64);   break;
+   case Triple::spir:    T.setArch(Triple::spir64);    break;
+   case Triple::wasm32:  T.setArch(Triple::wasm64);    break;
++  case Triple::usc:     T.setArch(Triple::usc64);    break;
+   }
+   return T;
+ }
+diff --git lib/Support/Valgrind.cpp lib/Support/Valgrind.cpp
+index facf8d9..7034485 100644
+--- a/lib/Support/Valgrind.cpp
++++ b/lib/Support/Valgrind.cpp
+@@ -52,23 +52,3 @@ void llvm::sys::ValgrindDiscardTranslations(const void *Addr, size_t Len) {
+ }
+ 
+ #endif  // !HAVE_VALGRIND_VALGRIND_H
+-
+-// These functions require no implementation, tsan just looks at the arguments
+-// they're called with. However, they are required to be weak as some other
+-// application or library may already be providing these definitions for the
+-// same reason we are.
+-extern "C" {
+-LLVM_ATTRIBUTE_WEAK void AnnotateHappensAfter(const char *file, int line,
+-                                              const volatile void *cv);
+-void AnnotateHappensAfter(const char *file, int line, const volatile void *cv) {
+-}
+-LLVM_ATTRIBUTE_WEAK void AnnotateHappensBefore(const char *file, int line,
+-                                               const volatile void *cv);
+-void AnnotateHappensBefore(const char *file, int line,
+-                           const volatile void *cv) {}
+-LLVM_ATTRIBUTE_WEAK void AnnotateIgnoreWritesBegin(const char *file, int line);
+-void AnnotateIgnoreWritesBegin(const char *file, int line) {}
+-LLVM_ATTRIBUTE_WEAK void AnnotateIgnoreWritesEnd(const char *file, int line);
+-void AnnotateIgnoreWritesEnd(const char *file, int line) {}
+-}
+-
+diff --git lib/Transforms/IPO/ArgumentPromotion.cpp lib/Transforms/IPO/ArgumentPromotion.cpp
+index 4762011..0d504b7 100644
+--- a/lib/Transforms/IPO/ArgumentPromotion.cpp
++++ b/lib/Transforms/IPO/ArgumentPromotion.cpp
+@@ -812,11 +812,7 @@ CallGraphNode *ArgPromotion::DoPromotion(Function *F,
+             for (IndicesVector::const_iterator II = SI->second.begin(),
+                                                IE = SI->second.end();
+                  II != IE; ++II) {
+-              // Use i32 to index structs, and i64 for others (pointers/arrays).
+-              // This satisfies GEP constraints.
+-              Type *IdxTy = (ElTy->isStructTy() ?
+-                    Type::getInt32Ty(F->getContext()) : 
+-                    Type::getInt64Ty(F->getContext()));
++              Type *IdxTy = Type::getInt32Ty(F->getContext());
+               Ops.push_back(ConstantInt::get(IdxTy, *II));
+               // Keep track of the type we're currently indexing.
+               ElTy = cast<CompositeType>(ElTy)->getTypeAtIndex(*II);
+diff --git lib/Transforms/InstCombine/InstCombineAddSub.cpp lib/Transforms/InstCombine/InstCombineAddSub.cpp
+index 2d2c109..0fe030f 100644
+--- a/lib/Transforms/InstCombine/InstCombineAddSub.cpp
++++ b/lib/Transforms/InstCombine/InstCombineAddSub.cpp
+@@ -1131,6 +1131,7 @@ Instruction *InstCombiner::visitAdd(BinaryOperator &I) {
+     return BinaryOperator::CreateXor(LHS, RHS);
+ 
+   // X + X --> X << 1
++#if 0 // disable - this isn't optimal for Rogue
+   if (LHS == RHS) {
+     BinaryOperator *New =
+       BinaryOperator::CreateShl(LHS, ConstantInt::get(I.getType(), 1));
+@@ -1138,6 +1139,7 @@ Instruction *InstCombiner::visitAdd(BinaryOperator &I) {
+     New->setHasNoUnsignedWrap(I.hasNoUnsignedWrap());
+     return New;
+   }
++#endif
+ 
+   // -A + B  -->  B - A
+   // -A + -B  -->  -(A + B)
+@@ -1160,8 +1162,10 @@ Instruction *InstCombiner::visitAdd(BinaryOperator &I) {
+     return ReplaceInstUsesWith(I, V);
+ 
+   // A+B --> A|B iff A and B have no bits set in common.
++#if 0 // disable - this isn't optimal for Rogue
+   if (haveNoCommonBitsSet(LHS, RHS, DL, AC, &I, DT))
+     return BinaryOperator::CreateOr(LHS, RHS);
++#endif
+ 
+   if (Constant *CRHS = dyn_cast<Constant>(RHS)) {
+     Value *X;
+diff --git lib/Transforms/InstCombine/InstCombineCompares.cpp lib/Transforms/InstCombine/InstCombineCompares.cpp
+index 95bba3c..e2fc76b 100644
+--- a/lib/Transforms/InstCombine/InstCombineCompares.cpp
++++ b/lib/Transforms/InstCombine/InstCombineCompares.cpp
+@@ -3663,12 +3663,14 @@ Instruction *InstCombiner::visitICmpInst(ICmpInst &I) {
+   // N.B.  This transform is only valid when the 'cmpxchg' is not permitted to
+   // spuriously fail.  In those cases, the old value may equal the expected
+   // value but it is possible for the swap to not occur.
++#if 0 // disable - this isn't optimal for Rogue
+   if (I.getPredicate() == ICmpInst::ICMP_EQ)
+     if (auto *EVI = dyn_cast<ExtractValueInst>(Op0))
+       if (auto *ACXI = dyn_cast<AtomicCmpXchgInst>(EVI->getAggregateOperand()))
+         if (EVI->getIndices()[0] == 0 && ACXI->getCompareOperand() == Op1 &&
+             !ACXI->isWeak())
+           return ExtractValueInst::Create(ACXI, 1);
++#endif
+ 
+   {
+     Value *X; ConstantInt *Cst;
+diff --git lib/Transforms/InstCombine/InstCombineMulDivRem.cpp lib/Transforms/InstCombine/InstCombineMulDivRem.cpp
+index a554e9f..f4fd55e 100644
+--- a/lib/Transforms/InstCombine/InstCombineMulDivRem.cpp
++++ b/lib/Transforms/InstCombine/InstCombineMulDivRem.cpp
+@@ -206,6 +206,7 @@ Instruction *InstCombiner::visitMul(BinaryOperator &I) {
+       return BO;
+     }
+ 
++#if 0 // Sub-optimal on Rogue
+     if (match(&I, m_Mul(m_Value(NewOp), m_Constant(C1)))) {
+       Constant *NewCst = nullptr;
+       if (match(C1, m_APInt(IVal)) && IVal->isPowerOf2())
+@@ -231,6 +232,7 @@ Instruction *InstCombiner::visitMul(BinaryOperator &I) {
+         return Shl;
+       }
+     }
++#endif
+   }
+ 
+   if (ConstantInt *CI = dyn_cast<ConstantInt>(Op1)) {
+diff --git lib/Transforms/Scalar/GVN.cpp lib/Transforms/Scalar/GVN.cpp
+index d1eba6e..a9389ec 100644
+--- a/lib/Transforms/Scalar/GVN.cpp
++++ b/lib/Transforms/Scalar/GVN.cpp
+@@ -850,6 +850,9 @@ static bool CanCoerceMustAliasedValueToLoad(Value *StoredVal,
+         DL.getTypeSizeInBits(LoadTy))
+     return false;
+ 
++  if (DL.getTypeSizeInBits(StoredVal->getType()) > 32)
++    return false;
++
+   return true;
+ }
+ 
+@@ -1130,8 +1133,35 @@ static Value *GetStoreValueForLoad(Value *SrcVal, unsigned Offset,
+   if (SrcVal->getType()->getScalarType()->isPointerTy())
+     SrcVal = Builder.CreatePtrToInt(SrcVal,
+         DL.getIntPtrType(SrcVal->getType()));
+-  if (!SrcVal->getType()->isIntegerTy())
++  // If the available value is a vector of the same element type as the Load...
++  if (VectorType* vecTy = dyn_cast<VectorType>(SrcVal->getType())) {
++    Type* primTy = vecTy->getElementType();
++    const unsigned byteSize = (DL.getTypeSizeInBits(primTy) + 7) / 8;
++    // Extract the relevant element from the vector and use that
++    if (primTy == LoadTy && (Offset % byteSize) == 0) {
++      const unsigned elem = Offset / byteSize;
++      return Builder.CreateExtractElement(SrcVal, elem, "GVN_vec_extract");
++    }
++    else if (byteSize > LoadSize)
++    {
++      const unsigned elem = Offset / byteSize;
++      const unsigned newOffset= Offset - (elem * byteSize);
++      Value* EX = Builder.CreateExtractElement(SrcVal, elem, "GVN_vec_extract");
++      // The Offset is in bytes.
++      // we now have the element (of byteSize size) and want to get it into an i8 (int of LoadSize bytes).
++      // Cast the (possible) float to i32 (or corresponding size), then bitcast to a vector of i8 and extract
++      // the element we need. After that, we cast the extracted value to the destination type and return.
++      Value* BCast = Builder.CreateBitCast(EX, IntegerType::get(Ctx, byteSize*8), "GVN_vec_extract_bitcast");
++      Type* vecTy = VectorType::get(IntegerType::get(Ctx, LoadSize*8), byteSize / LoadSize);
++      Value* Vec = Builder.CreateBitCast(BCast, vecTy, "GVN_vec_extract_trunc");
++      Value* Val = Builder.CreateExtractElement(Vec, newOffset / LoadSize, "GVN_vec_extract_from_bitcasted");
++      return Builder.CreateBitCast(Val, LoadTy, "GVN_vec_extract_final_bitcast");
++    }
++  }
++  if (!SrcVal->getType()->isIntegerTy()) {
++    if (!DL.isLegalInteger(StoreSize*8)) return nullptr;
+     SrcVal = Builder.CreateBitCast(SrcVal, IntegerType::get(Ctx, StoreSize*8));
++  }
+ 
+   // Shift the bits to the least significant depending on endianness.
+   unsigned ShiftAmt;
+@@ -1297,12 +1327,20 @@ static Value *ConstructSSAForLoadSet(LoadInst *LI,
+     if (SSAUpdate.HasValueForBlock(BB))
+       continue;
+ 
+-    SSAUpdate.AddAvailableValue(BB, AV.MaterializeAdjustedValue(LI, gvn));
++    Value* val = AV.MaterializeAdjustedValue(LI, gvn);
++
++    if (!val)
++      return 0;
++
++    SSAUpdate.AddAvailableValue(BB, val);
+   }
+ 
+   // Perform PHI construction.
+   Value *V = SSAUpdate.GetValueInMiddleOfBlock(LI->getParent());
+ 
++  if (!V)
++    return 0;
++
+   // If new PHI nodes were created, notify alias analysis.
+   if (V->getType()->getScalarType()->isPointerTy()) {
+     AliasAnalysis *AA = gvn.getAliasAnalysis();
+@@ -1689,6 +1727,8 @@ bool GVN::PerformLoadPRE(LoadInst *LI, AvailValInBlkVect &ValuesPerBlock,
+ 
+   // Perform PHI construction.
+   Value *V = ConstructSSAForLoadSet(LI, ValuesPerBlock, *this);
++  if (!V)
++    return false;
+   LI->replaceAllUsesWith(V);
+   if (isa<PHINode>(V))
+     V->takeName(LI);
+@@ -2479,6 +2519,13 @@ bool GVN::performScalarPRE(Instruction *CurInst) {
+   if (isa<CmpInst>(CurInst))
+     return false;
+ 
++  // Disable GVN PRE (partial redundancy elimination) for GEP to local memory.
++  // It creates PHI nodes that LowerPtrCasts cannot handle and does not 
++  // provide performance improvements because of how the HW works.
++  if (GetElementPtrInst* GEP = dyn_cast<GetElementPtrInst>(CurInst))
++    if (GEP->getType()->getPointerAddressSpace() == 3)
++      return false;
++  
+   // We don't currently value number ANY inline asm calls.
+   if (CallInst *CallI = dyn_cast<CallInst>(CurInst))
+     if (CallI->isInlineAsm())
+diff --git lib/Transforms/Scalar/LoopUnrollPass.cpp lib/Transforms/Scalar/LoopUnrollPass.cpp
+index d78db6c..9b28728 100644
+--- a/lib/Transforms/Scalar/LoopUnrollPass.cpp
++++ b/lib/Transforms/Scalar/LoopUnrollPass.cpp
+@@ -38,7 +38,7 @@ using namespace llvm;
+ #define DEBUG_TYPE "loop-unroll"
+ 
+ static cl::opt<unsigned>
+-    UnrollThreshold("unroll-threshold", cl::init(150), cl::Hidden,
++    UnrollThreshold("unroll-threshold", cl::init(500), cl::Hidden,
+                     cl::desc("The baseline cost threshold for loop unrolling"));
+ 
+ static cl::opt<unsigned> UnrollPercentDynamicCostSavedThreshold(
+diff --git lib/Transforms/Scalar/SCCP.cpp lib/Transforms/Scalar/SCCP.cpp
+index 4d3a708..c41a477 100644
+--- a/lib/Transforms/Scalar/SCCP.cpp
++++ b/lib/Transforms/Scalar/SCCP.cpp
+@@ -1780,6 +1780,7 @@ bool IPSCCP::runOnModule(Module &M) {
+ 
+         // Replaces all of the uses of a variable with uses of the
+         // constant.
++        if (AI->getType() != CST->getType()) continue;
+         AI->replaceAllUsesWith(CST);
+         ++IPNumArgsElimed;
+       }
+diff --git lib/Transforms/Scalar/SROA.cpp lib/Transforms/Scalar/SROA.cpp
+index 947513a..f79fa55 100644
+--- a/lib/Transforms/Scalar/SROA.cpp
++++ b/lib/Transforms/Scalar/SROA.cpp
+@@ -1586,9 +1586,6 @@ static Value *getNaturalGEPWithType(IRBuilderTy &IRB, const DataLayout &DL,
+     if (ArrayType *ArrayTy = dyn_cast<ArrayType>(ElementTy)) {
+       ElementTy = ArrayTy->getElementType();
+       Indices.push_back(IRB.getIntN(PtrSize, 0));
+-    } else if (VectorType *VectorTy = dyn_cast<VectorType>(ElementTy)) {
+-      ElementTy = VectorTy->getElementType();
+-      Indices.push_back(IRB.getInt32(0));
+     } else if (StructType *STy = dyn_cast<StructType>(ElementTy)) {
+       if (STy->element_begin() == STy->element_end())
+         break; // Nothing left to descend into.
+@@ -1621,25 +1618,10 @@ static Value *getNaturalGEPRecursively(IRBuilderTy &IRB, const DataLayout &DL,
+   // We can't recurse through pointer types.
+   if (Ty->isPointerTy())
+     return nullptr;
+-
+-  // We try to analyze GEPs over vectors here, but note that these GEPs are
+-  // extremely poorly defined currently. The long-term goal is to remove GEPing
+-  // over a vector from the IR completely.
+-  if (VectorType *VecTy = dyn_cast<VectorType>(Ty)) {
+-    unsigned ElementSizeInBits = DL.getTypeSizeInBits(VecTy->getScalarType());
+-    if (ElementSizeInBits % 8 != 0) {
+-      // GEPs over non-multiple of 8 size vector elements are invalid.
+-      return nullptr;
+-    }
+-    APInt ElementSize(Offset.getBitWidth(), ElementSizeInBits / 8);
+-    APInt NumSkippedElements = Offset.sdiv(ElementSize);
+-    if (NumSkippedElements.ugt(VecTy->getNumElements()))
+-      return nullptr;
+-    Offset -= NumSkippedElements * ElementSize;
+-    Indices.push_back(IRB.getInt(NumSkippedElements));
+-    return getNaturalGEPRecursively(IRB, DL, Ptr, VecTy->getElementType(),
+-                                    Offset, TargetTy, Indices, NamePrefix);
+-  }
++  
++  // Do not cross vector types as these GEPs are not well-defined
++  if (isa<VectorType>(Ty))
++    return nullptr;
+ 
+   if (ArrayType *ArrTy = dyn_cast<ArrayType>(Ty)) {
+     Type *ElementTy = ArrTy->getElementType();
+@@ -1929,6 +1911,12 @@ static Value *convertValue(const DataLayout &DL, IRBuilderTy &IRB, Value *V,
+     return IRB.CreatePtrToInt(V, NewTy);
+   }
+ 
++  // Converting across namespaces
++  if (OldTy->isPointerTy() && NewTy->isPointerTy() &&
++    OldTy->getPointerElementType() == NewTy->getPointerElementType()) {
++    return IRB.CreateAddrSpaceCast(V, NewTy);
++  }
++
+   return IRB.CreateBitCast(V, NewTy);
+ }
+ 
+@@ -1959,6 +1947,9 @@ static bool isVectorPromotionViableForSlice(AllocaSlices::Partition &P,
+                       ? Ty->getElementType()
+                       : VectorType::get(Ty->getElementType(), NumElements);
+ 
++  if (!DL.isLegalInteger(NumElements * ElementSize * 8))
++    return false;
++
+   Type *SplitIntTy =
+       Type::getIntNTy(Ty->getContext(), NumElements * ElementSize * 8);
+ 
+@@ -2210,6 +2201,9 @@ static bool isIntegerWideningViable(AllocaSlices::Partition &P, Type *AllocaTy,
+   if (SizeInBits != DL.getTypeStoreSizeInBits(AllocaTy))
+     return false;
+ 
++  if (!DL.isLegalInteger(SizeInBits))
++    return false;
++
+   // We need to ensure that an integer type with the appropriate bitwidth can
+   // be converted to the alloca type, whatever that is. We don't want to force
+   // the alloca itself to have an integer type if there is a more suitable one.
+@@ -3907,7 +3901,6 @@ bool SROA::presplitLoadsAndStores(AllocaInst &AI, AllocaSlices &AS) {
+     int Idx = 0, Size = Offsets.Splits.size();
+     for (;;) {
+       auto *PartTy = Type::getIntNTy(Ty->getContext(), PartSize * 8);
+-      auto *PartPtrTy = PartTy->getPointerTo(SI->getPointerAddressSpace());
+ 
+       // Either lookup a split load or create one.
+       LoadInst *PLoad;
+@@ -3915,9 +3908,11 @@ bool SROA::presplitLoadsAndStores(AllocaInst &AI, AllocaSlices &AS) {
+         PLoad = (*SplitLoads)[Idx];
+       } else {
+         IRB.SetInsertPoint(BasicBlock::iterator(LI));
++        unsigned LIAS = LI->getPointerAddressSpace();
++        auto *PartPtrTy = PartTy->getPointerTo(LIAS);
+         PLoad = IRB.CreateAlignedLoad(
+             getAdjustedPtr(IRB, DL, LoadBasePtr,
+-                           APInt(DL.getPointerSizeInBits(), PartOffset),
++                           APInt(DL.getPointerSizeInBits(LIAS), PartOffset),
+                            PartPtrTy, LoadBasePtr->getName() + "."),
+             getAdjustedAlignment(LI, PartOffset, DL), /*IsVolatile*/ false,
+             LI->getName());
+@@ -3925,9 +3920,11 @@ bool SROA::presplitLoadsAndStores(AllocaInst &AI, AllocaSlices &AS) {
+ 
+       // And store this partition.
+       IRB.SetInsertPoint(BasicBlock::iterator(SI));
++      unsigned SIAS = SI->getPointerAddressSpace();
++      auto *PartPtrTy = PartTy->getPointerTo(SIAS);
+       StoreInst *PStore = IRB.CreateAlignedStore(
+           PLoad, getAdjustedPtr(IRB, DL, StoreBasePtr,
+-                                APInt(DL.getPointerSizeInBits(), PartOffset),
++                                APInt(DL.getPointerSizeInBits(SIAS), PartOffset),
+                                 PartPtrTy, StoreBasePtr->getName() + "."),
+           getAdjustedAlignment(SI, PartOffset, DL), /*IsVolatile*/ false);
+ 
+@@ -4172,6 +4169,9 @@ bool SROA::splitAlloca(AllocaInst &AI, AllocaSlices &AS) {
+   bool Changed = false;
+   const DataLayout &DL = AI.getModule()->getDataLayout();
+ 
++// The presplitLoadsAndStores tries to generate a bitcast between two different
++// address spaces. Removing the code to avoid that from happening.
++
+   // First try to pre-split loads and stores.
+   Changed |= presplitLoadsAndStores(AI, AS);
+ 
+diff --git lib/Transforms/Utils/SimplifyCFG.cpp lib/Transforms/Utils/SimplifyCFG.cpp
+index 36781c1..299dd78 100644
+--- a/lib/Transforms/Utils/SimplifyCFG.cpp
++++ b/lib/Transforms/Utils/SimplifyCFG.cpp
+@@ -4211,7 +4211,10 @@ static bool SwitchToLookupTable(SwitchInst *SI, IRBuilder<> &Builder,
+ 
+     // If using a bitmask, use any value to fill the lookup table holes.
+     Constant *DV = NeedMask ? ResultLists[PHI][0].second : DefaultResults[PHI];
+-    SwitchLookupTable Table(Mod, TableSize, MinCaseVal, ResultList, DV, DL);
++
++    // Make the  bitwidth at least 8bit and a power-of-2 to avoid unnecessary illegal types.
++    uint64_t TableSizePowOf2 = NextPowerOf2(std::max(7ULL, TableSize - 1ULL));
++    SwitchLookupTable Table(Mod, TableSizePowOf2, MinCaseVal, ResultList, DV, DL);
+ 
+     Value *Result = Table.BuildLookup(TableIndex, Builder);
+ 
+diff --git utils/llvm-build/llvmbuild/main.py utils/llvm-build/llvmbuild/main.py
+index 353741f..d8b9e40 100644
+--- a/utils/llvm-build/llvmbuild/main.py
++++ b/utils/llvm-build/llvmbuild/main.py
+@@ -720,6 +720,7 @@ def add_magic_target_components(parser, project, opts):
+     # reasons, as these are the names configure currently comes up with.
+     native_target_name = { 'x86' : 'X86',
+                            'x86_64' : 'X86',
++                           'mips' : 'Mips',
+                            'Unknown' : None }.get(opts.native_target,
+                                                   opts.native_target)
+     if native_target_name is None:
+@@ -749,12 +750,12 @@ def add_magic_target_components(parser, project, opts):
+         for name in enable_target_names:
+             target = available_targets.get(name)
+             if target is None:
+-                parser.error("invalid target to enable: %r (not in project)" % (
+-                        name,))
+-            if target.type_name != 'TargetGroup':
++                pass
++            elif target.type_name != 'TargetGroup':
+                 parser.error("invalid target to enable: %r (not a target)" % (
+                         name,))
+-            enable_targets.append(target)
++            else:
++                enable_targets.append(target)
+ 
+     # Find the special library groups we are going to populate. We enforce that
+     # these appear in the project (instead of just adding them) so that they at
