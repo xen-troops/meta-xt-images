@@ -1,0 +1,12 @@
+--- a/tools/intern/llvmufgen/Linux.mk	2017-10-17 17:14:08.617136184 +0300
++++ b/tools/intern/llvmufgen/Linux.mk	2017-10-17 17:27:30.138808648 +0300
+@@ -15,7 +15,7 @@
+      LLVMTarget LLVMExecutionEngine LLVMRuntimeDyld LLVMObject LLVMMCParser \
+      LLVMBitReader LLVMMC LLVMCore LLVMSupport
+ 
+-libufwriter_target_cxxflags := -std=c++11
++libufwriter_target_cxxflags := -std=gnu++11
+ ifeq ($(SUPPORT_ANDROID_PLATFORM),1)
+  libufwriter_target_extlibs  := c++ dl
+ endif
+
