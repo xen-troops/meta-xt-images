@@ -22,6 +22,9 @@ ANDROID_VARIANT ?= "eng"
 ANDROID_CCACHE = "prebuilts/misc/linux-x86/ccache/ccache"
 ANDROID_CCACHE_SIZE_GB = "50"
 
+ANDROID_JACK_ADMIN = "prebuilts/sdk/tools/jack-admin"
+ANDROID_JACK_MEM_SIZE_GB = "4"
+
 JAVA_HOME = "${STAGING_LIBDIR_JVM_NATIVE}/${JDK_VER}"
 
 do_configure() {
@@ -35,6 +38,9 @@ do_compile() {
     export CCACHE_DIR=${SSTATE_DIR}/../${PN}-ccache
     ${ANDROID_CCACHE} -M "${ANDROID_CCACHE_SIZE_GB}G"
 
+    export JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx${ANDROID_JACK_MEM_SIZE_GB}g"
+    ${ANDROID_JACK_ADMIN} kill-server || true
+
     # run Android build in sane environment
     env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" PATH="${JAVA_HOME}/bin:$PATH" USER="$USER" \
            JAVA_HOME="${JAVA_HOME}" \
@@ -42,5 +48,8 @@ do_compile() {
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
                     make ${EXTRA_OEMAKE} ${PARALLEL_MAKE} \
            "
+    # clean up
+    ${ANDROID_JACK_ADMIN} kill-server || true
+    ${ANDROID_JACK_ADMIN} uninstall-server || true
 }
 
