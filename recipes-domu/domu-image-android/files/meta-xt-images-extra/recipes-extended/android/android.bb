@@ -20,7 +20,7 @@ ANDROID_PRODUCT ?= "aosp_arm64"
 ANDROID_VARIANT ?= "eng"
 SOC_FAMILY ?= "default"
 
-ANDROID_CCACHE_BIN = "prebuilts/misc/linux-x86/ccache/ccache"
+ANDROID_CCACHE_BIN_DIR = "prebuilts/misc/linux-x86/ccache"
 ANDROID_CCACHE_SIZE_GB = "50"
 # keep .ccache aside of Yocto's cache
 ANDROID_CCACHE_DIR = "${SSTATE_DIR}/../${PN}-${ANDROID_PRODUCT}-${ANDROID_VARIANT}-${SOC_FAMILY}-ccache"
@@ -40,10 +40,11 @@ do_compile() {
     ${ANDROID_JACK_ADMIN} kill-server || true
 
     # run Android build in sane environment
-    env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" PATH="${JAVA_HOME}/bin:$PATH" USER="$USER" \
+    env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" USER="$USER" \
+           PATH="${JAVA_HOME}/bin:${S}/${ANDROID_CCACHE_BIN_DIR}:$PATH" \
            JAVA_HOME="${JAVA_HOME}" \
            USE_CCACHE="1" CCACHE_DIR="${ANDROID_CCACHE_DIR}" \
-           bash -c "${ANDROID_CCACHE_BIN} -M ${ANDROID_CCACHE_SIZE_GB}G && \
+           bash -c "${ANDROID_CCACHE_BIN_DIR}/ccache -M ${ANDROID_CCACHE_SIZE_GB}G && \
                     source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
                     make ${EXTRA_OEMAKE} ${PARALLEL_MAKE} \
