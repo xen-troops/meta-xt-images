@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4c0bc17c954e99fd547528d938832bfa"
 
 inherit autotools
 FILESEXTRAPATHS_prepend := "${THISDIR}/llvm:"
-RDEPENDS_${PN} += "ncurses ncurses-libtinfo libgcc libstdc++ glibc"
+RDEPENDS_${PN} += "ncurses ncurses-libtinfo libgcc libstdc++ glibc binutils"
 
 SRC_URI = "http://llvm.org/releases/${PV}/llvm-${PV}.src.tar.xz;name=llvm \
            http://llvm.org/releases/${PV}/cfe-${PV}.src.tar.xz;name=cfe \
