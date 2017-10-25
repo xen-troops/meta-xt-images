@@ -18,6 +18,7 @@ DEPENDS += "${JDK_VER} lz4-native"
 
 ANDROID_PRODUCT ?= "aosp_arm64"
 ANDROID_VARIANT ?= "eng"
+SOC_FAMILY ?= "default"
 
 ANDROID_CCACHE = "prebuilts/misc/linux-x86/ccache/ccache"
 ANDROID_CCACHE_SIZE_GB = "50"
