@@ -20,8 +20,10 @@ ANDROID_PRODUCT ?= "aosp_arm64"
 ANDROID_VARIANT ?= "eng"
 SOC_FAMILY ?= "default"
 
-ANDROID_CCACHE = "prebuilts/misc/linux-x86/ccache/ccache"
+ANDROID_CCACHE_BIN = "prebuilts/misc/linux-x86/ccache/ccache"
 ANDROID_CCACHE_SIZE_GB = "50"
+# keep .ccache aside of Yocto's cache
+ANDROID_CCACHE_DIR = "${SSTATE_DIR}/../${PN}-${ANDROID_PRODUCT}-${ANDROID_VARIANT}-${SOC_FAMILY}-ccache"
 
 ANDROID_JACK_ADMIN = "prebuilts/sdk/tools/jack-admin"
 ANDROID_JACK_MEM_SIZE_GB = "4"
@@ -34,18 +36,15 @@ do_configure() {
 do_compile() {
     cd ${S}
 
-    export USE_CCACHE=1
-    # keep .ccache aside of Yocto's cache
-    export CCACHE_DIR=${SSTATE_DIR}/../${PN}-ccache
-    ${ANDROID_CCACHE} -M "${ANDROID_CCACHE_SIZE_GB}G"
-
     export JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx${ANDROID_JACK_MEM_SIZE_GB}g"
     ${ANDROID_JACK_ADMIN} kill-server || true
 
     # run Android build in sane environment
     env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" PATH="${JAVA_HOME}/bin:$PATH" USER="$USER" \
            JAVA_HOME="${JAVA_HOME}" \
-           bash -c "source build/envsetup.sh && \
+           USE_CCACHE="1" CCACHE_DIR="${ANDROID_CCACHE_DIR}" \
+           bash -c "${ANDROID_CCACHE_BIN} -M ${ANDROID_CCACHE_SIZE_GB}G && \
+                    source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
                     make ${EXTRA_OEMAKE} ${PARALLEL_MAKE} \
            "
