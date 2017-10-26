@@ -14,7 +14,7 @@ inherit java
 
 JDK_VER = "openjdk-8-native"
 
-DEPENDS += "${JDK_VER} lz4-native"
+DEPENDS += "${JDK_VER} lz4-native bc-native"
 
 ANDROID_PRODUCT ?= "aosp_arm64"
 ANDROID_VARIANT ?= "eng"
