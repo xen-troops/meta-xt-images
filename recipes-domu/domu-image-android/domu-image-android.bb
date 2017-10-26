@@ -29,7 +29,7 @@ XT_QUIRK_BB_ADD_LAYER += " \
 "
 
 # meta layers needed to build Android native build environment, e.g. openjdk
-NATIVE_TOOLS_BRANCH = "morty"
+NATIVE_TOOLS_BRANCH = "pyro"
 
 SRC_URI_append = " \
     git://git.yoctoproject.org/poky;branch=${NATIVE_TOOLS_BRANCH};destsuffix=poky;scmdata=keep \

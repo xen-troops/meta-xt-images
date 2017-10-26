@@ -1,4 +1,4 @@
-From db38c33ab5ba762e78a8a39628e06ff00dd9e276 Mon Sep 17 00:00:00 2001
+From 6b7c997d383b74219e3e65cbac4d9c2cb4af3209 Mon Sep 17 00:00:00 2001
 From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 Date: Tue, 24 Oct 2017 10:14:14 +0300
 Subject: [PATCH 3/3] fetch2/repo: Use multiple jobs to fetch and sync
@@ -16,10 +16,10 @@ Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
  1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
-index 44f95ddfb98b..85bed033f6be 100644
+index 7035926591e3..904520477ec2 100644
 --- a/bitbake/lib/bb/fetch2/repo.py
 +++ b/bitbake/lib/bb/fetch2/repo.py
-@@ -57,6 +57,13 @@ class Repo(FetchMethod):
+@@ -56,6 +56,13 @@ class Repo(FetchMethod):
          ud.codir = os.path.join(repodir, gitsrcname, ud.manifest)
          ud.repodir = os.path.join(ud.codir, "repo")
  
@@ -33,7 +33,7 @@ index 44f95ddfb98b..85bed033f6be 100644
      def download(self, ud, d):
          """Fetch url"""
  
-@@ -74,7 +81,7 @@ class Repo(FetchMethod):
+@@ -73,7 +80,7 @@ class Repo(FetchMethod):
          runfetchcmd("repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=ud.repodir)
  
          bb.fetch2.check_network_access(d, "repo sync %s" % ud.url, ud.url)
@@ -42,7 +42,7 @@ index 44f95ddfb98b..85bed033f6be 100644
  
          scmdata = ud.parm.get("scmdata", "")
          if scmdata == "keep":
-@@ -88,7 +95,7 @@ class Repo(FetchMethod):
+@@ -87,7 +94,7 @@ class Repo(FetchMethod):
      def unpack(self, ud, destdir, d):
          FetchMethod.unpack(self, ud, destdir, d)
          bb.fetch2.check_network_access(d, "repo sync %s" % ud.url, ud.url)
