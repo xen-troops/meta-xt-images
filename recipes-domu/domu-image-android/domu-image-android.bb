@@ -54,3 +54,7 @@ python do_configure_append() {
     bb.build.exec_func("update_local_conf", d)
 }
 
+# we do not have an SDK to populate
+do_populate_sdk() {
+}
+
