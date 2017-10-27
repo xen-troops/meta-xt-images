@@ -11,6 +11,7 @@ SRCREV = "${AUTOREV}"
 require inc/xt_shared_env.inc
 
 inherit java
+inherit pythonnative
 
 JDK_VER = "openjdk-8-native"
 
