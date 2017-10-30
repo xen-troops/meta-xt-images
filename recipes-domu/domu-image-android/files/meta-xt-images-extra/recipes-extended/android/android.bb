@@ -50,7 +50,7 @@ do_compile() {
     env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" USER="$USER" \
            PATH="${JAVA_HOME}/bin:${S}/${ANDROID_CCACHE_BIN_DIR}:$PATH" \
            JAVA_HOME="${JAVA_HOME}" OUT_DIR_COMMON_BASE="${ANDROID_OUT_DIR_COMMON_BASE}" \
-           USE_CCACHE="1" CCACHE_DIR="${ANDROID_CCACHE_DIR}" \
+           USE_CCACHE="1" CCACHE_DIR="${ANDROID_CCACHE_DIR}" CCACHE_BASEDIR="${S}" \
            bash -c "${ANDROID_CCACHE_BIN_DIR}/ccache -M ${ANDROID_CCACHE_SIZE_GB}G && \
                     source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
