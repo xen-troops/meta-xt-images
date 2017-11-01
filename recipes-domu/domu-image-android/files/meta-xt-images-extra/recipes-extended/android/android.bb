@@ -30,9 +30,6 @@ ANDROID_CCACHE_SIZE_GB = "50"
 # keep .ccache aside of Yocto's cache
 ANDROID_CCACHE_DIR = "${SSTATE_DIR}/../${PN}-${ANDROID_PRODUCT}-${ANDROID_VARIANT}-${SOC_FAMILY}-ccache"
 
-ANDROID_JACK_ADMIN = "prebuilts/sdk/tools/jack-admin"
-ANDROID_JACK_MEM_SIZE_GB = "4"
-
 JAVA_HOME = "${STAGING_LIBDIR_JVM_NATIVE}/${JDK_VER}"
 
 ANDROID_OUT_DIR_COMMON_BASE = ""
@@ -42,9 +39,6 @@ do_configure() {
 
 do_compile() {
     cd ${S}
-
-    export JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx${ANDROID_JACK_MEM_SIZE_GB}g"
-    ${ANDROID_JACK_ADMIN} kill-server || true
 
     # run Android build in sane environment
     env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" USER="$USER" \
@@ -56,8 +50,5 @@ do_compile() {
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
                     make ${EXTRA_OEMAKE} ${PARALLEL_MAKE} \
            "
-    # clean up
-    ${ANDROID_JACK_ADMIN} kill-server || true
-    ${ANDROID_JACK_ADMIN} uninstall-server || true
 }
 
