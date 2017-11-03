@@ -60,12 +60,14 @@ do_populate_sdk() {
 
 # populate Android ccache as well
 do_populate_sstate_cache_append() {
-    CURRENT_CCACHE=$(ls ${SSTATE_DIR}/ | grep "ccache")
-    if [ -n "${CURRENT_CCACHE}" ] && [ -d ${SSTATE_DIR}/${CURRENT_CCACHE} ]; then
-        if [ -d ${XT_SSTATE_CACHE_MIRROR_DIR}/${CURRENT_CCACHE} ]; then
-            rm -rf  ${XT_SSTATE_CACHE_MIRROR_DIR}/${CURRENT_CCACHE}
+    if [ -n "${EXPANDED_XT_POPULATE_SSTATE_CACHE}" ] ; then
+        CURRENT_CCACHE=$(ls ${SSTATE_DIR}/ | grep "ccache")
+        if [ -n "${CURRENT_CCACHE}" ] && [ -d ${SSTATE_DIR}/${CURRENT_CCACHE} ]; then
+            if [ -d ${XT_SSTATE_CACHE_MIRROR_DIR}/${CURRENT_CCACHE} ]; then
+                rm -rf  ${XT_SSTATE_CACHE_MIRROR_DIR}/${CURRENT_CCACHE}
+            fi
+            mv -f ${SSTATE_DIR}/${CURRENT_CCACHE} ${XT_SSTATE_CACHE_MIRROR_DIR}/ || true
         fi
-        mv -f ${SSTATE_DIR}/${CURRENT_CCACHE} ${XT_SSTATE_CACHE_MIRROR_DIR}/ || true
     fi
 }
 
