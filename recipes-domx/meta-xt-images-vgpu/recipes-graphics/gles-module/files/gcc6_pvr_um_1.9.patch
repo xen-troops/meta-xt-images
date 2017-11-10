@@ -1,0 +1,13 @@
+diff --git a/tools/intern/llvmufgen/Linux.mk b/tools/intern/llvmufgen/Linux.mk
+index bbe5d259290d..769a4bd2437f 100644
+--- a/tools/intern/llvmufgen/Linux.mk
++++ b/tools/intern/llvmufgen/Linux.mk
+@@ -95,7 +95,7 @@ libufwriter_common_includes := \
+ 	tools/intern/usc2
+ 
+ libufwriter_common_cxxflags := \
+-	-std=c++11 \
++	-std=gnu++11 \
+ 	-Wno-unused-parameter -Woverloaded-virtual -Wcast-qual
+ ifneq ($(BUILD),debug)
+ # If assertions are disabled (release build)
