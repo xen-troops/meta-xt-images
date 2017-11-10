@@ -1,4 +1,19 @@
-S = "${WORKDIR}/git"
+require gles-common.inc
+
+DESCRIPTION = "PowerVR GPU user EGL header files"
+LICENSE = "CLOSED"
+
+PN = "gles-module-egl-headers"
+PR = "r1"
+
+do_compile[noexec] = "1"
+
+# The recipe needs headers from virtual/mesa.
+do_populate_sysroot[depends] += "virtual/mesa:do_populate_sysroot"
+
+do_configure() {
+    :
+}
 
 do_install() {
     # Install header files
@@ -15,3 +30,4 @@ do_install() {
     install -m 644 ${S}/include/khronos/drv/EGL/eglext_REL.h ${D}/${includedir}/EGL/
 }
 
+RDEPENDS_${PN}-dev = ""
