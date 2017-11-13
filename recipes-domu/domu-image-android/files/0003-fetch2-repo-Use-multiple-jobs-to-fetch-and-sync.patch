@@ -1,4 +1,4 @@
-From 6b7c997d383b74219e3e65cbac4d9c2cb4af3209 Mon Sep 17 00:00:00 2001
+From cfc5a5144100d24ae342694412b0a4097ad64ff3 Mon Sep 17 00:00:00 2001
 From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 Date: Tue, 24 Oct 2017 10:14:14 +0300
 Subject: [PATCH 3/3] fetch2/repo: Use multiple jobs to fetch and sync
@@ -16,19 +16,19 @@ Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
  1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
-index 7035926591e3..904520477ec2 100644
+index d51d1eb..0ed0f92 100644
 --- a/bitbake/lib/bb/fetch2/repo.py
 +++ b/bitbake/lib/bb/fetch2/repo.py
 @@ -56,6 +56,13 @@ class Repo(FetchMethod):
          ud.codir = os.path.join(repodir, gitsrcname, ud.manifest)
          ud.repodir = os.path.join(ud.codir, "repo")
  
-+    def sync(self, ud, d):
++    def sync(self, destdir, d):
 +        # repo can separate the "network" sync (the git fetch part, network bound)
 +        # from the "local" sync (the git rebase part, compute & i/o bound).
 +        num_jobs = d.getVar("BB_NUMBER_THREADS", True) or "1"
-+        runfetchcmd("repo sync -c -n -j%s" % num_jobs, d, workdir=ud.repodir)
-+        runfetchcmd("repo sync -c -l -j%s" % num_jobs, d, workdir=ud.repodir)
++        runfetchcmd("repo sync -c -n -j%s" % num_jobs, d, workdir=destdir)
++        runfetchcmd("repo sync -c -l -j%s" % num_jobs, d, workdir=destdir)
 +
      def download(self, ud, d):
          """Fetch url"""
@@ -38,7 +38,7 @@ index 7035926591e3..904520477ec2 100644
  
          bb.fetch2.check_network_access(d, "repo sync %s" % ud.url, ud.url)
 -        runfetchcmd("repo sync", d, workdir=ud.repodir)
-+        self.sync(ud, d)
++        self.sync(ud.repodir, d)
  
          scmdata = ud.parm.get("scmdata", "")
          if scmdata == "keep":
@@ -46,8 +46,8 @@ index 7035926591e3..904520477ec2 100644
      def unpack(self, ud, destdir, d):
          FetchMethod.unpack(self, ud, destdir, d)
          bb.fetch2.check_network_access(d, "repo sync %s" % ud.url, ud.url)
--        runfetchcmd("repo sync", d, workdir=ud.repodir)
-+        self.sync(ud, d)
+-        runfetchcmd("repo sync", d, workdir=destdir)
++        self.sync(os.path.join(destdir, "repo"), d)
  
      def supports_srcrev(self):
          return False
