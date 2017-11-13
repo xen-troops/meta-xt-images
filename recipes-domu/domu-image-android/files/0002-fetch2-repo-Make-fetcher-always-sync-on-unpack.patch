@@ -1,4 +1,4 @@
-From a6720d0014a89b430adc30672d6efd32b532cf44 Mon Sep 17 00:00:00 2001
+From 87abc0b6214c188883ecb51a0e89a154278906e9 Mon Sep 17 00:00:00 2001
 From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 Date: Thu, 26 Oct 2017 17:16:49 +0300
 Subject: [PATCH 2/3] fetch2/repo: Make fetcher always sync on unpack
@@ -15,7 +15,7 @@ Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
  1 file changed, 13 insertions(+), 9 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
-index 6b2efa2b91f8..7035926591e3 100644
+index 6b2efa2..d51d1eb 100644
 --- a/bitbake/lib/bb/fetch2/repo.py
 +++ b/bitbake/lib/bb/fetch2/repo.py
 @@ -51,6 +51,10 @@ class Repo(FetchMethod):
@@ -65,7 +65,7 @@ index 6b2efa2b91f8..7035926591e3 100644
 +    def unpack(self, ud, destdir, d):
 +        FetchMethod.unpack(self, ud, destdir, d)
 +        bb.fetch2.check_network_access(d, "repo sync %s" % ud.url, ud.url)
-+        runfetchcmd("repo sync", d, workdir=ud.repodir)
++        runfetchcmd("repo sync", d, workdir=destdir)
  
      def supports_srcrev(self):
          return False
