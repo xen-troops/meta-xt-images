@@ -19,7 +19,7 @@ JDK_VER = "openjdk-8-native"
 # and tools: these are not needed for Android
 BASEDEPENDS = ""
 
-DEPENDS += "${JDK_VER} lz4-native bc-native python-pycrypto-native curl-native rsync-native"
+DEPENDS += "${JDK_VER} lz4-native bc-native python-pycrypto-native curl-native rsync-native bison-native"
 
 ANDROID_PRODUCT ?= "aosp_arm64"
 ANDROID_VARIANT ?= "eng"
