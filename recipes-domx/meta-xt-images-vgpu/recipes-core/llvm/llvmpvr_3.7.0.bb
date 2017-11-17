@@ -112,5 +112,5 @@ do_install() {
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-INSANE_SKIP_${PN} += "ldflags split-strip arch staticdev"
+INSANE_SKIP_${PN} += "ldflags split-strip arch staticdev file-rdeps"
 FILES_${PN} += "${libdir}/llvm_build_dir/"
