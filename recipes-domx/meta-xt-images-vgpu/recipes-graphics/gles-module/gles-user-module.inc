@@ -42,6 +42,9 @@ RPROVIDES_${PN} += " \
     libopencl \
 "
 
+# FIXME: because of LLVM this recipe behaves much better if not run with -jMAX
+PARALLEL_MAKE = "-j ${@oe.utils.cpu_count() - 1}"
+
 EXTRA_OEMAKE += "CROSS_COMPILE=${TARGET_PREFIX}"
 EXTRA_OEMAKE += "PVR_BUILD_DIR=${PVRUM_BUILD_DIR}"
 EXTRA_OEMAKE += "DISCIMAGE=${PVRUM_DISCIMAGE}"
