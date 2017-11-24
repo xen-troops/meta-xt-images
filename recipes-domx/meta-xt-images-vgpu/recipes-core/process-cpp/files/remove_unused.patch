@@ -1,0 +1,12 @@
+--- a/CMakeLists.txt	2015-07-21 11:46:58.000000000 +0300
++++ b/CMakeLists.txt	2017-12-04 17:41:00.095568511 +0200
+@@ -69,8 +69,6 @@
+   ${PROPERTIES_CPP_INCLUDE_DIRS}
+ )
+ 
+-add_subdirectory(doc)
+ add_subdirectory(data)
+ add_subdirectory(include)
+ add_subdirectory(src)
+-add_subdirectory(tests)
+
