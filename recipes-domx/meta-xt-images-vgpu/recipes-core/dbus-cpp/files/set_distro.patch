@@ -1,0 +1,21 @@
+--- a/CMakeLists.txt	2017-11-24 17:22:06.588688332 +0200
++++ b/CMakeLists.txt	2017-11-24 17:21:51.364715576 +0200
+@@ -34,6 +34,7 @@
+   #   - other distros
+   #   - errors
+   # we define the version to be 2.0.0
++  set(DISTRO_CODENAME "poky")
+   if (${DISTRO_CODENAME} STREQUAL "vivid")
+     set(DBUS_CPP_VERSION_MAJOR 4)
+     set(DBUS_CPP_VERSION_MINOR 3)
+@@ -98,10 +98,5 @@
+ )
+ 
+ add_subdirectory(data)
+-add_subdirectory(doc)
+-add_subdirectory(examples)
+ add_subdirectory(include)
+ add_subdirectory(src)
+-add_subdirectory(tests)
+-
+-enable_coverage_report(benchmark)
