@@ -13,7 +13,7 @@ MACHINE_FEATURES = ""
 KERNEL_IMAGETYPE = "Image"
 IMAGE_FSTYPES = "tar.bz2"
 
-SERIAL_CONSOLE = "115200 ttySC0"
+SERIAL_CONSOLE ?= "115200 ttySC0"
 
 # Configuration for kernel
 PREFERRED_PROVIDER_virtual/kernel = "linux-renesas"
