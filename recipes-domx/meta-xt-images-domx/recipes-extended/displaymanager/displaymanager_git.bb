@@ -5,7 +5,7 @@ PR = "r0"
 
 DEPENDS = "libxenbe libconfig wayland-ivi-extension dbus-cpp"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=a23a74b3f4caf9616230789d94217acb"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 S = "${WORKDIR}/git"
 
