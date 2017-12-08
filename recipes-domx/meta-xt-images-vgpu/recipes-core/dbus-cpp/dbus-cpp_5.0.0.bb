@@ -26,19 +26,20 @@ do_configure () {
 do_compile_prepend () {
      if [ -d ${WORKDIR}/build ]; then
          cd ${WORKDIR}/build
-         cmake -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake ${S}
+         cmake -DCMAKE_INSTALL_PREFIX=/usr \
+               -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake ${S}
      fi
 }
 
 FILES_${PN} += " \
-    /usr/local/bin/* \
-    /usr/local/lib/* \
-    /usr/local/include/* \
-    /usr/local/share/* \
+    ${bindir} \
+    ${libdir} \
+    ${includedir} \
+    ${datadir} \
 "
 
 FILES_${PN}-dev += " \
-    /usr/local/libexec/* \
+    /usr/libexec/* \
 "
 
 INSANE_SKIP_${PN} += "dev-so libdir"
