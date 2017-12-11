@@ -6,6 +6,7 @@ LICENSE = "GPLv2 | LGPLv3"
 LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 DEPENDS = "dbus \
            boost \
+           bzr-native \
            libxml2 \
            properties-cpp \
            process-cpp \
