@@ -8,6 +8,7 @@ SRC_URI = "bzr://bazaar.launchpad.net/~phablet-team/properties-cpp/trunk"
 SRCREV = "17"
 
 S = "${WORKDIR}/trunk"
+DEPENDS = "bzr-native"
 
 inherit pkgconfig
 
