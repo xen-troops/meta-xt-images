@@ -78,7 +78,7 @@ do_configure_append() {
          unset UNIVERSAL_SDK_PATH
          ${S}/configure --build=${LLVM_BUILD_ARCH} \
              --host=${LLVM_BUILD_ARCH} --target=${LLVM_BUILD_ARCH} \
-             --disable-polly --disable-zlib --enable-libcpp
+             --disable-polly --disable-zlib --enable-libcpp --disable-bindings
          cd ..
     fi
 
