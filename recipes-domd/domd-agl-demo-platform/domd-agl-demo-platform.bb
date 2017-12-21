@@ -1,4 +1,5 @@
 require inc/agl.inc
+require inc/agl_domd.inc
 
 XT_AGL_FEATURES += "agl-demo"
 
