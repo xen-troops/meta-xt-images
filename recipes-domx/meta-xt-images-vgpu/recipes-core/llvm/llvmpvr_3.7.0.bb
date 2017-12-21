@@ -101,12 +101,11 @@ do_compile() {
 
 do_install() {
     if [ -d ${WORKDIR}/llvm-${PV}.src ];then
-        mv ${WORKDIR}/llvm-${PV}.src ${WORKDIR}/llvm.src
+        install -d ${D}${libdir}/llvm_build_dir
+        cp -rf ${S} ${D}${libdir}/llvm_build_dir
+        mv ${D}${libdir}/llvm_build_dir/llvm-${PV}.src ${D}${libdir}/llvm_build_dir/llvm.src
+        cp -rf ${LLVM_BUILD_DIR}  ${D}${libdir}/llvm_build_dir
     fi
-
-    install -d ${D}${libdir}/llvm_build_dir
-    cp -rf ${WORKDIR}/llvm.src  ${D}${libdir}/llvm_build_dir
-    cp -rf ${LLVM_BUILD_DIR}  ${D}${libdir}/llvm_build_dir
 }
 
 INHIBIT_PACKAGE_STRIP = "1"
