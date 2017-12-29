@@ -1,7 +1,7 @@
-From 87abc0b6214c188883ecb51a0e89a154278906e9 Mon Sep 17 00:00:00 2001
+From d8cc9c16df233abfc39efbc04e37a795134588bd Mon Sep 17 00:00:00 2001
 From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 Date: Thu, 26 Oct 2017 17:16:49 +0300
-Subject: [PATCH 2/3] fetch2/repo: Make fetcher always sync on unpack
+Subject: [PATCH 2/4] fetch2/repo: Make fetcher always sync on unpack
 
 Currently if repo has fetched the repository and
 cached it to a tar file it never runs repo sync again,
@@ -15,7 +15,7 @@ Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
  1 file changed, 13 insertions(+), 9 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
-index 6b2efa2..d51d1eb 100644
+index 6b2efa2b91f8..d51d1ebf7a07 100644
 --- a/bitbake/lib/bb/fetch2/repo.py
 +++ b/bitbake/lib/bb/fetch2/repo.py
 @@ -51,6 +51,10 @@ class Repo(FetchMethod):

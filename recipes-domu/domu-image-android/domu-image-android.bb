@@ -38,6 +38,7 @@ SRC_URI_append = " \
     file://0001-fetch2-repo-Always-check-if-branch-is-correct.patch;patchdir=poky \
     file://0002-fetch2-repo-Make-fetcher-always-sync-on-unpack.patch;patchdir=poky \
     file://0003-fetch2-repo-Use-multiple-jobs-to-fetch-and-sync.patch;patchdir=poky \
+    file://0004-Make-pack-unpack-multithreaded.patch;patchdir=poky \
 "
 
 update_local_conf() {

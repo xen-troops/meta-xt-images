@@ -1,7 +1,7 @@
-From b2602c3f406158879330e7cab52b3cb6907e1034 Mon Sep 17 00:00:00 2001
+From a733c75f3a0918d85e433e4fc567cb3b9949858b Mon Sep 17 00:00:00 2001
 From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 Date: Tue, 24 Oct 2017 10:04:03 +0300
-Subject: [PATCH 1/3] fetch2/repo: Always check if branch is correct
+Subject: [PATCH 1/4] fetch2/repo: Always check if branch is correct
 
 Current implementation doesn't pay attention if
 the same repository is used for manifest, but different
@@ -15,7 +15,7 @@ Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
-index 1be91cc..6b2efa2 100644
+index 1be91cc698e3..6b2efa2b91f8 100644
 --- a/bitbake/lib/bb/fetch2/repo.py
 +++ b/bitbake/lib/bb/fetch2/repo.py
 @@ -70,9 +70,8 @@ class Repo(FetchMethod):
