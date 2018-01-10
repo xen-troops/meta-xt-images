@@ -1,0 +1,12 @@
+--- a/CMakeLists.txt	2018-01-10 13:02:36.784475328 +0200
++++ b/CMakeLists.txt	2018-01-10 13:03:46.628481207 +0200
+@@ -37,9 +37,7 @@
+   include/
+ )
+ 
+-add_subdirectory(doc)
+ add_subdirectory(data)
+ add_subdirectory(include)
+-add_subdirectory(tests)
+ 
+ # enable_coverage_report(posix_process_test linux_process_test)
