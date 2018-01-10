@@ -18,9 +18,3 @@ S = "${WORKDIR}/trunk"
 
 inherit pkgconfig cmake
 
-do_compile_prepend () {
-     if [ -d ${S}/build ]; then
-         cd ${S}/build
-         cmake ..
-     fi
-}
