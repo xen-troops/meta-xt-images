@@ -17,6 +17,18 @@ XT_QUIRK_UNPACK_SRC_URI += " \
 # these layers will be added to bblayers.conf on do_configure
 XT_QUIRK_BB_ADD_LAYER += " \
     meta-xt-images-domx \
+    meta-virtualization \
+    meta-selinux \
+    meta-clang \
+"
+
+# Set default revision of AGL auxiliary layers
+BRANCH ?= "morty"
+
+SRC_URI_append = " \
+    git://git.yoctoproject.org/meta-virtualization;destsuffix=repo/meta-virtualization;branch=${BRANCH} \
+    git://git.yoctoproject.org/meta-selinux;destsuffix=repo/meta-selinux;branch=${BRANCH} \
+    git://github.com/kraj/meta-clang.git;destsuffix=repo/meta-clang;branch=${BRANCH} \
 "
 
 ################################################################################
