@@ -10,10 +10,15 @@ SRC_URI[sha256sum] = "0d451227b705a0dd21d8408353fe7e44d3a5069e6c4c26e5f146f1314b
 DEPENDS = "python-native"
 PROVIDES += "bzr-native"
 
-inherit native pythonnative
+inherit native pythonnative distutils
 
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
+
+export BUILD_SYS
+export HOST_SYS
+export STAGING_LIBDIR
+export STAGING_INCDIR
 
 do_install () {
     python setup.py install
