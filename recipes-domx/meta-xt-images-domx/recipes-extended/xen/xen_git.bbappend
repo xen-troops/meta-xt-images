@@ -16,6 +16,18 @@ RDEPENDS_${PN}-base += "\
     ${PN}-livepatch \
     "
 
+RDEPENDS_${PN}-base_remove += " \
+    ${PN}-blktap \
+    ${PN}-libblktapctl \
+    ${PN}-libvhd \
+    "
+
+RRECOMMENDS_${PN}-base += " \
+    ${PN}-blktap \
+    ${PN}-libblktapctl \
+    ${PN}-libvhd \
+    "
+
 FILES_${PN}-hypervisor += "\
     /usr/lib/debug/xen-syms-* \
     "
@@ -50,10 +62,18 @@ FILES_${PN}-pkgconfig = "\
     ${datadir}/pkgconfig \
     "
 
+FILES_${PN}-libxentoolcore = "${libdir}/libxentoolcore.so.*"
+FILES_${PN}-libxentoolcore-dev = " \
+    ${libdir}/libxentoolcore.so \
+    ${datadir}/pkgconfig/xentoolcore.pc \
+    "
+
 PACKAGES_append = "\
     ${PN}-libxendevicemodel \
     ${PN}-libxendevicemodel-dev \
     ${PN}-pkgconfig \
+    ${PN}-libxentoolcore \
+    ${PN}-libxentoolcore-dev \
     "
 
 SYSTEMD_SERVICE_${PN}-xencommons += " \
@@ -68,4 +88,8 @@ SYSTEMD_SERVICE_${PN}-xencommons_remove += " \
 RDEPENDS_${PN}-efi = " \
     bash \
     python \
+    "
+
+FILES_${PN}-misc_append = "\
+    ${sbindir}/xen-diag \
     "
