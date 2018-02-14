@@ -17,8 +17,10 @@ do_configure() {
 
 do_install() {
     # Install header files
-    install -d ${D}/${includedir}/CL
-    install -m 644 ${S}/include/khronos/CL/*.h ${D}/${includedir}/CL/
+    if [ -d ${S}/include/khronos/CL ]; then
+        install -d ${D}/${includedir}/CL
+        install -m 644 ${S}/include/khronos/CL/*.h ${D}/${includedir}/CL/
+    fi
     install -d ${D}/${includedir}/EGL
     install -m 644 ${S}/include/khronos/EGL/*.h ${D}/${includedir}/EGL/
     install -d ${D}/${includedir}/GLES2
