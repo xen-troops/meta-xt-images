@@ -12,3 +12,14 @@ rcar_unpack_evaproprietary() {
     cd ${S}/meta-renesas
     sh meta-rcar-gen3/docs/sample/copyscript/copy_evaproprietary_softwares.sh -f $PKGS_DIR
 }
+
+xt_unpack_proprietary() {
+    export PKGS_DIR="${S}/proprietary/xt_rcar"
+    if [ -n "${EXPANDED_XT_RCAR_EVAPROPRIETARY_DIR}" ] ; then
+        install -d ${PKGS_DIR}
+        cp -rf ${XT_RCAR_EVAPROPRIETARY_DIR}/* ${PKGS_DIR}
+    fi
+    cd ${PKGS_DIR}
+    install -d ${S}/meta-xt-prod-extra/recipes-graphics/rcar-proprietary-graphic/files
+    cp r8a779* ${S}/meta-xt-prod-extra/recipes-graphics/rcar-proprietary-graphic/files
+}
