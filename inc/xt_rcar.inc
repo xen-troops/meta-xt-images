@@ -21,5 +21,5 @@ xt_unpack_proprietary() {
     fi
     cd ${PKGS_DIR}
     install -d ${S}/meta-xt-prod-extra/recipes-graphics/rcar-proprietary-graphic/files
-    cp r8a779* ${S}/meta-xt-prod-extra/recipes-graphics/rcar-proprietary-graphic/files
+    cp rcar-proprietary-graphic* ${S}/meta-xt-prod-extra/recipes-graphics/rcar-proprietary-graphic/files
 }
