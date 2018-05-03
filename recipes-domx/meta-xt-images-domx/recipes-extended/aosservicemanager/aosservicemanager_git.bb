@@ -17,3 +17,8 @@ DEPENDS += "\
 	golang.org-x-crypto \
 	golang.org-x-sys \
 "
+
+RDEPENDS_${PN} += "\
+	runc \
+	netns \
+"
