@@ -63,7 +63,7 @@ do_configure_prepend() {
         tar -xzf ${WORKDIR}/Meta_Embedded_Toolkit-2.8.1.CentOS-5.tar.gz
         rm -f ${WORKDIR}/Meta_Embedded_Toolkit-2.8.1.CentOS-5.tar.gz
         rm -f ${WORKDIR}/*.pdf
-        ./Meta_Embedded_Toolkit-2.8.1.CentOS-5/install.sh ${S}
+        ./Meta_Embedded_Toolkit-2.8.1.CentOS-5/install.sh x64 ${S}
         rm -rf ${S}/Meta_Embedded_Toolkit-2.8.1.CentOS-5
     fi
 }
