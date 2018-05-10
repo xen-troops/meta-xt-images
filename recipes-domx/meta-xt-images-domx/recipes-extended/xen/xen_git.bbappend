@@ -69,8 +69,6 @@ FILES_${PN}-libxentoolcore-dev = " \
     "
 
 PACKAGES_append = "\
-    ${PN}-libxendevicemodel \
-    ${PN}-libxendevicemodel-dev \
     ${PN}-pkgconfig \
     ${PN}-libxentoolcore \
     ${PN}-libxentoolcore-dev \
