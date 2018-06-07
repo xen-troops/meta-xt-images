@@ -33,6 +33,7 @@ ANDROID_CCACHE_DIR = "${SSTATE_DIR}/../${PN}-${ANDROID_PRODUCT}-${ANDROID_VARIAN
 JAVA_HOME = "${STAGING_LIBDIR_JVM_NATIVE}/${JDK_VER}"
 
 ANDROID_OUT_DIR_COMMON_BASE = ""
+BOARD_USES_DRM_HWCOMPOSER = "true"
 
 do_configure() {
 }
@@ -45,6 +46,7 @@ do_compile() {
            PATH="${JAVA_HOME}/bin:${S}/${ANDROID_CCACHE_BIN_DIR}:$PATH" \
            JAVA_HOME="${JAVA_HOME}" OUT_DIR_COMMON_BASE="${ANDROID_OUT_DIR_COMMON_BASE}" \
            USE_CCACHE="1" CCACHE_DIR="${ANDROID_CCACHE_DIR}" CCACHE_BASEDIR="${S}" \
+           BOARD_USES_DRM_HWCOMPOSER="${BOARD_USES_DRM_HWCOMPOSER}" \
            bash -c "${ANDROID_CCACHE_BIN_DIR}/ccache -M ${ANDROID_CCACHE_SIZE_GB}G && \
                     source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
