@@ -15,7 +15,7 @@ python () {
 KMETA = "kernel-meta"
 
 LINUX_KERNEL_TYPE = "tiny"
-LINUX_VERSION ?= "4.9.0"
+LINUX_VERSION ?= "4.14.0"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
