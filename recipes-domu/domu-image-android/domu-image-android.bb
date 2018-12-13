@@ -7,8 +7,9 @@ inherit xt_quirks
 inherit xt_reconstruct
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/../../classes:"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/repo"
 
 ################################################################################
 # set to AUTOREV so we can override this while reconstructing this build with
@@ -21,7 +22,8 @@ SRCREV = "${AUTOREV}"
 ###############################################################################
 # these will be populated into the inner build system on do_unpack_xt_extras
 XT_QUIRK_UNPACK_SRC_URI += " \
-    file://meta-xt-images-extra \
+    file://meta-xt-images-extra;subdir=repo \
+    file://xt_reconstruct.bbclass;subdir=repo/meta-xt-images-extra/classes \
 "
 
 # these layers will be added to bblayers.conf on do_configure
@@ -29,13 +31,7 @@ XT_QUIRK_BB_ADD_LAYER += " \
     meta-xt-images-extra \
 "
 
-# meta layers needed to build Android native build environment, e.g. openjdk
-NATIVE_TOOLS_BRANCH = "pyro"
-
 SRC_URI_append = " \
-    git://git.yoctoproject.org/poky;branch=${NATIVE_TOOLS_BRANCH};destsuffix=poky;scmdata=keep \
-    git://git.yoctoproject.org/meta-java;branch=${NATIVE_TOOLS_BRANCH};destsuffix=meta-java;scmdata=keep \
-    git://git.openembedded.org/meta-openembedded;branch=${NATIVE_TOOLS_BRANCH};destsuffix=meta-openembedded;scmdata=keep \
     file://0001-fetch2-repo-Always-check-if-branch-is-correct.patch;patchdir=poky \
     file://0002-fetch2-repo-Make-fetcher-always-sync-on-unpack.patch;patchdir=poky \
     file://0003-fetch2-repo-Use-multiple-jobs-to-fetch-and-sync.patch;patchdir=poky \
@@ -79,4 +75,3 @@ do_populate_sstate_cache_append() {
         fi
     fi
 }
-
