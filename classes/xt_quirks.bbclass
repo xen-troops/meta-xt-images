@@ -36,6 +36,13 @@ python do_unpack_xt_extras() {
     d.setVar("SRC_URI", "")
     # now deliver all the static extras into inner build system
     urls = (d.getVar("XT_QUIRK_UNPACK_SRC_URI") or "").split()
+
+    # if we are reconstructing the build then populate saved recipe revisions
+    if xt_is_reconstruct(d):
+        versions_path = os.path.join(get_reconstruct_dir(d), d.getVar("PN"))
+        d.appendVar("FILESEXTRAPATHS", versions_path or "")
+        urls.append("file://" + "build-versions.inc" + ";subdir=repo/build/conf")
+
     for url in urls:
         type, _, location, _, _, _ = bb.fetch.decodeurl(url)
         item = check_url_or_pack(url, type, location, d) + " "
@@ -61,4 +68,32 @@ python do_patch_prepend() {
     except bb.fetch2.BBFetchException as e:
         bb.fatal(str(e))
 
+}
+
+def get_reconstruct_dir(d):
+    return os.path.join(d.getVar("XT_RECONSTRUCT_DIR") or "",
+        d.getVar('PN'))
+
+def xt_is_reconstruct(d):
+    bb.debug(1, "Checking if build reconstruction was requested")
+    reconstruct_dir = d.getVar("XT_RECONSTRUCT_DIR") or ""
+
+    if not reconstruct_dir:
+        bb.debug(1, "Not a reconstructtion build")
+        return False
+
+    pn = d.getVar("PN") or ""
+    if not os.path.isdir(os.path.join(reconstruct_dir, pn)):
+        bb.debug(1, "Nothing to reconstruct")
+        return False
+    return True
+
+addtask xt_config_reconstruct after do_configure before do_compile
+python do_xt_config_reconstruct() {
+    if not xt_is_reconstruct(d):
+        return
+
+    conf_file = os.path.join(d.getVar("S" or ""), "build/conf/local.conf")
+    with open(conf_file, "a") as f:
+        f.write("require" + " " + "build-versions.inc" + "\n")
 }
