@@ -4,6 +4,7 @@ LICENSE = "MIT"
 
 inherit build_yocto
 inherit xt_quirks
+inherit xt_reconstruct
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
