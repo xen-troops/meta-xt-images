@@ -12,6 +12,7 @@ require inc/xt_shared_env.inc
 
 inherit java
 inherit pythonnative
+inherit xt_reconstruct
 
 JDK_VER = "openjdk-8-native"
 
@@ -59,4 +60,3 @@ do_compile() {
                     make ${EXTRA_OEMAKE} ${PARALLEL_MAKE} \
            "
 }
-
