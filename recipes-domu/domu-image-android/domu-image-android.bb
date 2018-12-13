@@ -8,7 +8,7 @@ inherit xt_reconstruct
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/repo"
 
 ################################################################################
 # set to AUTOREV so we can override this while reconstructing this build with
@@ -29,13 +29,7 @@ XT_QUIRK_BB_ADD_LAYER += " \
     meta-xt-images-extra \
 "
 
-# meta layers needed to build Android native build environment, e.g. openjdk
-NATIVE_TOOLS_BRANCH = "pyro"
-
 SRC_URI_append = " \
-    git://git.yoctoproject.org/poky;branch=${NATIVE_TOOLS_BRANCH};destsuffix=poky;scmdata=keep \
-    git://git.yoctoproject.org/meta-java;branch=${NATIVE_TOOLS_BRANCH};destsuffix=meta-java;scmdata=keep \
-    git://git.openembedded.org/meta-openembedded;branch=${NATIVE_TOOLS_BRANCH};destsuffix=meta-openembedded;scmdata=keep \
     file://0001-fetch2-repo-Always-check-if-branch-is-correct.patch;patchdir=poky \
     file://0002-fetch2-repo-Make-fetcher-always-sync-on-unpack.patch;patchdir=poky \
     file://0003-fetch2-repo-Use-multiple-jobs-to-fetch-and-sync.patch;patchdir=poky \
