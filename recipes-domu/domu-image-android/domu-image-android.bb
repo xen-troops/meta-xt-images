@@ -7,6 +7,7 @@ inherit xt_quirks
 inherit xt_reconstruct
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/../../classes:"
 
 S = "${WORKDIR}/repo"
 
@@ -22,6 +23,7 @@ SRCREV = "${AUTOREV}"
 # these will be populated into the inner build system on do_unpack_xt_extras
 XT_QUIRK_UNPACK_SRC_URI += " \
     file://meta-xt-images-extra \
+    file://xt_reconstruct.bbclass;subdir=meta-xt-images-extra/classes \
 "
 
 # these layers will be added to bblayers.conf on do_configure
