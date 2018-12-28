@@ -16,10 +16,10 @@ XT_QUIRK_UNPACK_SRC_URI += " \
 
 # these layers will be added to bblayers.conf on do_configure
 XT_QUIRK_BB_ADD_LAYER += " \
-    meta-xt-images-domx \
     meta-virtualization \
     meta-selinux \
     meta-clang \
+    meta-xt-images-domx \
 "
 
 # Set default revision of AGL auxiliary layers
