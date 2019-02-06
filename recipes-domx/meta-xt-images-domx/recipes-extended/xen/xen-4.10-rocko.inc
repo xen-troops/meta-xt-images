@@ -2,6 +2,10 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=bbb4b1bdc2c3b6743da3c39d03249095"
 
+XEN_REL = "4.10"
+PV = "${XEN_REL}.0+git${SRCPV}"
+SRCREV = "${AUTOREV}"
+
 DEPENDS += "u-boot-mkimage-native systemd"
 
 PACKAGECONFIG ?= " \
