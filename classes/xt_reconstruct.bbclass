@@ -53,7 +53,7 @@ do_build_prepend() {
 
     # we are running a build with buildhistory enabled, but check
     # if this is not a reconstruct build
-    if [ -n ${XT_RECONSTRUCT_DIR} ];then
+    if [ -n "${XT_RECONSTRUCT_DIR}" ];then
         echo "This is a reconstructtion build, not populating manifest"
         exit 0
     fi
