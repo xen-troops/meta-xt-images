@@ -5,6 +5,7 @@ LICENSE = "CLOSED"
 
 DEPENDS = " \
     gles-module-egl-headers \
+    wayland-native \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'libgbm wayland-kms', '', d)} \
     virtual/kernel \
     wayland-kms \
@@ -51,9 +52,11 @@ EXTRA_OEMAKE += "DISCIMAGE=${PVRUM_DISCIMAGE}"
 EXTRA_OEMAKE += "KERNELDIR=${STAGING_KERNEL_BUILDDIR}"
 EXTRA_OEMAKE += "METAG_INST_ROOT=${S}/metag/2.8"
 EXTRA_OEMAKE += "LLVM_BUILD_DIR=${STAGING_LIBDIR}/llvm_build_dir"
+EXTRA_OEMAKE += "PVRSRV_VZ_NUM_OSID=${XT_PVR_NUM_OSID}"
 
 RDEPENDS_${PN} = " \
     kernel-module-gles \
+    python \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'libgbm wayland-kms', '', d)} \
 "
 
@@ -97,6 +100,9 @@ do_install() {
         install -d ${D}/${exec_prefix}/bin
         install -m 755 ${D}/${sysconfdir}/init.d/rc.pvr ${D}/${exec_prefix}/bin/pvrinit
     fi
+
+    install -d ${DEPLOY_DIR_IMAGE}/xt-rcar
+    cp -rf ${D}/* ${DEPLOY_DIR_IMAGE}/xt-rcar
 }
 
 PACKAGES = "\
