@@ -1,5 +1,12 @@
 require gles-common.inc
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+
+SRC_URI_append = " \
+    file://0001-EGL-eglext.h-Include-eglmesaext.h.patch \
+    file://GLES-gl3ext.h.patch \
+"
+
 DESCRIPTION = "PowerVR GPU user EGL header files"
 LICENSE = "CLOSED"
 
@@ -30,6 +37,8 @@ do_install() {
     install -d ${D}/${includedir}/KHR
     install -m 644 ${S}/include/khronos/KHR/khrplatform.h ${D}/${includedir}/KHR/khrplatform.h
     install -m 644 ${S}/include/khronos/drv/EGL/eglext_REL.h ${D}/${includedir}/EGL/
+    install -d ${DEPLOY_DIR_IMAGE}/xt-rcar
+    cp -rf ${D}/* ${DEPLOY_DIR_IMAGE}/xt-rcar
 }
 
 RDEPENDS_${PN}-dev = ""
