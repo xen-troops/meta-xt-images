@@ -1,0 +1,35 @@
+From 37fe0928b3a02f128a677f371c5cabbc65d1aaad Mon Sep 17 00:00:00 2001
+From: Ryosuke Sugai <ryosuke.sugai.nx@renesas.com>
+Date: Tue, 18 Dec 2018 18:58:53 +0900
+Subject: [PATCH] lib/randutils.c: Fix args of getrandom()
+
+Signed-off-by: Ryosuke Sugai <ryosuke.sugai.nx@renesas.com>
+---
+ lib/randutils.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/lib/randutils.c b/lib/randutils.c
+index 09dd261..bd3cda1 100644
+--- a/lib/randutils.c
++++ b/lib/randutils.c
+@@ -36,6 +36,8 @@
+ 
+ #if !defined(HAVE_GETRANDOM) && defined(SYS_getrandom)
+ /* libc without function, but we have syscal */
++#define GRND_NONBLOCK 0x01
++#define GRND_RANOM 0x02
+ static int getrandom(void *buf, size_t buflen, unsigned int flags)
+ {
+ 	return (syscall(SYS_getrandom, buf, buflen, flags));
+@@ -99,7 +101,7 @@ void random_get_bytes(void *buf, size_t nbytes)
+ 	unsigned char *cp = (unsigned char *)buf;
+ 
+ #ifdef HAVE_GETRANDOM
+-	while (getrandom(buf, nbytes, 0) < 0) {
++	while (getrandom(buf, nbytes, GRND_NONBLOCK) < 0) {
+ 		if (errno == EINTR)
+ 			continue;
+ 		break;
+-- 
+2.7.4
+
