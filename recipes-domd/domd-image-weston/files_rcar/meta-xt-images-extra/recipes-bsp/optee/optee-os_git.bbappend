@@ -29,6 +29,9 @@ EXTRA_OEMAKE = "PLATFORM=rcar \
 	       CROSS_COMPILE_ta_arm64=${HOST_PREFIX} \
 	       ta-targets=ta_arm64 \
 	       CFLAGS64=--sysroot=${STAGING_DIR_HOST} \
+	       CFG_SYSTEM_PTA=y \
+	       CFG_ASN1_PARSER=y \
+	       CFG_CORE_MBEDTLS_MPI=n \
 	       "
 
 do_configure() {
