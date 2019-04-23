@@ -50,7 +50,6 @@ update_local_conf() {
 
     if [ ! -z ${XT_ANDROID_PREBUILDS_DIR} ];then
         base_set_conf_value ${local_conf} DDK_KM_PREBUILT_MODULE "${XT_ANDROID_PREBUILDS_DIR}/pvr-km/pvrsrvkm.ko"
-        base_set_conf_value ${local_conf} TARGET_PREBUILT_KERNEL "${XT_ANDROID_PREBUILDS_DIR}/kernel/vmlinux"
         base_set_conf_value ${local_conf} DDK_UM_PREBUILDS "${XT_ANDROID_PREBUILDS_DIR}/pvr-um/"
     fi
 }
