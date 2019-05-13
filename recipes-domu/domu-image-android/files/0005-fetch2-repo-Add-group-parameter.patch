@@ -16,7 +16,7 @@ index ff4d548..ba6df27 100644
          bb.utils.mkdirhier(ud.repodir)
          bb.fetch2.check_network_access(d, "repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), ud.url)
 -        runfetchcmd("repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=ud.repodir)
-+        prebuilds = d.getVar("TARGET_PREBUILT_KERNEL") or ""
++        prebuilds = d.getVar("DDK_UM_PREBUILDS") or ""
 +        if prebuilds:
 +            runfetchcmd("repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=ud.repodir)
 +        else:
