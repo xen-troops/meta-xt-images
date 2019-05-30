@@ -21,6 +21,7 @@ OPTEEFLAVOR_salvator-xs-h3-2x2g-xt = "salvator_h3"
 OPTEEFLAVOR_salvator-x-h3-4x2g-xt = "salvator_h3_4x2g"
 OPTEEFLAVOR_salvator-xs-h3-4x2g-xt = "salvator_h3_4x2g"
 OPTEEFLAVOR_h3ulcb-4x2g-xt = "salvator_h3_4x2g"
+OPTEEFLAVOR_h3ulcb-4x2g-kf-xt = "salvator_h3_4x2g"
 
 EXTRA_OEMAKE = "PLATFORM=rcar \
 	       PLATFORM_FLAVOR=${OPTEEFLAVOR} \
