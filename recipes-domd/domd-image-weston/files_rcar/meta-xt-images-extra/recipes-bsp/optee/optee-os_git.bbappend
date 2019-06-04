@@ -41,3 +41,7 @@ do_configure() {
 do_compile() {
 	oe_runmake
 }
+
+do_deploy_append() {
+	install -m 0644 ${S}/out/arm-plat-${PLATFORM}/core/tee_raw.bin ${DEPLOYDIR}/tee_raw-${MACHINE}.bin
+}
