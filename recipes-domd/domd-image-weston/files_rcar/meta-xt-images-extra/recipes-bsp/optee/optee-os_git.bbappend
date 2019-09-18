@@ -10,6 +10,8 @@ PV = "3.4.0+git${SRCPV}"
 
 OPTEEMACHINE = "rcar"
 
+OPTEEFLAVOR_salvator-xs-m3n-xt = "salvator_m3n"
+
 OPTEEFLAVOR_m3ulcb-xt = "salvator_m3"
 OPTEEFLAVOR_salvator-x-m3-xt = "salvator_m3"
 
