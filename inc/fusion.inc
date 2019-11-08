@@ -23,11 +23,5 @@ XT_QUIRK_UNPACK_SRC_URI += " \
 # these layers will be added to bblayers.conf on do_configure
 XT_QUIRK_BB_ADD_LAYER += " \
     meta-xt-images-extra \
-    meta-virtualization \
     meta-xt-images-domx \
-"
-BRANCH ?= "rocko"
-
-SRC_URI_append = " \
-    git://git.yoctoproject.org/meta-virtualization;destsuffix=repo/meta-virtualization;branch=${BRANCH} \
 "
