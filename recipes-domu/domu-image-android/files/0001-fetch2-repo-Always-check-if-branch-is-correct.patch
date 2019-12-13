@@ -1,6 +1,6 @@
-From a733c75f3a0918d85e433e4fc567cb3b9949858b Mon Sep 17 00:00:00 2001
-From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Date: Tue, 24 Oct 2017 10:04:03 +0300
+From 6796c893f5f8ff38096aa15d44c21164a5974b79 Mon Sep 17 00:00:00 2001
+From: Usyk Ihor <ihor_usyk@epam.com>
+Date: Fri, 13 Dec 2019 15:07:17 +0100
 Subject: [PATCH 1/4] fetch2/repo: Always check if branch is correct
 
 Current implementation doesn't pay attention if
@@ -11,25 +11,30 @@ repo init/sync.
 
 Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 ---
- bitbake/lib/bb/fetch2/repo.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ bitbake/lib/bb/fetch2/repo.py | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
-index 1be91cc698e3..6b2efa2b91f8 100644
+index 8c7e81853a..e92640ff18 100644
 --- a/bitbake/lib/bb/fetch2/repo.py
 +++ b/bitbake/lib/bb/fetch2/repo.py
-@@ -70,9 +70,8 @@ class Repo(FetchMethod):
+@@ -73,12 +73,11 @@ class Repo(FetchMethod):
  
          repodir = os.path.join(codir, "repo")
          bb.utils.mkdirhier(repodir)
 -        if not os.path.exists(os.path.join(repodir, ".repo")):
--            bb.fetch2.check_network_access(d, "repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), ud.url)
--            runfetchcmd("repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=repodir)
+-            bb.fetch2.check_network_access(d, "%s init -m %s -b %s -u %s://%s%s%s" % (ud.basecmd, ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), ud.url)
+-            runfetchcmd("%s init -m %s -b %s -u %s://%s%s%s" % (ud.basecmd, ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=repodir)
 +        bb.fetch2.check_network_access(d, "repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), ud.url)
 +        runfetchcmd("repo init -m %s -b %s -u %s://%s%s%s" % (ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=repodir)
  
-         bb.fetch2.check_network_access(d, "repo sync %s" % ud.url, ud.url)
-         runfetchcmd("repo sync", d, workdir=repodir)
+-        bb.fetch2.check_network_access(d, "%s sync %s" % (ud.basecmd, ud.url), ud.url)
+-        runfetchcmd("%s sync" % ud.basecmd, d, workdir=repodir)
++        bb.fetch2.check_network_access(d, "repo sync %s" % ud.url, ud.url)
++        runfetchcmd("repo sync", d, workdir=repodir)
+ 
+         scmdata = ud.parm.get("scmdata", "")
+         if scmdata == "keep":
 -- 
-2.7.4
+2.17.1
 

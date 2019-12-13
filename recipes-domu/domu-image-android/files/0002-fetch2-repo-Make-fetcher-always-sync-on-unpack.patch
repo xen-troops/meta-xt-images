@@ -1,6 +1,6 @@
-From d8cc9c16df233abfc39efbc04e37a795134588bd Mon Sep 17 00:00:00 2001
-From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Date: Thu, 26 Oct 2017 17:16:49 +0300
+From 295b04aea3be8134bdaaf2b4aeb00914120f95a3 Mon Sep 17 00:00:00 2001
+From: Usyk Ihor <ihor_usyk@epam.com>
+Date: Fri, 13 Dec 2019 15:26:46 +0100
 Subject: [PATCH 2/4] fetch2/repo: Make fetcher always sync on unpack
 
 Currently if repo has fetched the repository and
@@ -9,16 +9,16 @@ thus making the build use potentially outdated repo.
 Fix this by implementing unpack functionality which runs
 repo sync.
 
-Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com> 
 ---
- bitbake/lib/bb/fetch2/repo.py | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ bitbake/lib/bb/fetch2/repo.py | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
-index 6b2efa2b91f8..d51d1ebf7a07 100644
+index e92640ff18..704e84390f 100644
 --- a/bitbake/lib/bb/fetch2/repo.py
 +++ b/bitbake/lib/bb/fetch2/repo.py
-@@ -51,6 +51,10 @@ class Repo(FetchMethod):
+@@ -54,6 +54,11 @@ class Repo(FetchMethod):
              ud.manifest += '.xml'
  
          ud.localfile = d.expand("repo_%s%s_%s_%s.tar.gz" % (ud.host, ud.path.replace("/", "."), ud.manifest, ud.branch))
@@ -26,22 +26,23 @@ index 6b2efa2b91f8..d51d1ebf7a07 100644
 +        gitsrcname = "%s%s" % (ud.host, ud.path.replace("/", "."))
 +        ud.codir = os.path.join(repodir, gitsrcname, ud.manifest)
 +        ud.repodir = os.path.join(ud.codir, "repo")
++
  
      def download(self, ud, d):
          """Fetch url"""
-@@ -59,22 +63,17 @@ class Repo(FetchMethod):
+@@ -62,22 +67,16 @@ class Repo(FetchMethod):
              logger.debug(1, "%s already exists (or was stashed). Skipping repo init / sync.", ud.localpath)
              return
  
+-        repodir = d.getVar("REPODIR") or (d.getVar("DL_DIR") + "/repo")
 -        gitsrcname = "%s%s" % (ud.host, ud.path.replace("/", "."))
--        repodir = d.getVar("REPODIR") or os.path.join(d.getVar("DL_DIR"), "repo")
 -        codir = os.path.join(repodir, gitsrcname, ud.manifest)
 -
          if ud.user:
              username = ud.user + "@"
          else:
              username = ""
- 
+-
 -        repodir = os.path.join(codir, "repo")
 -        bb.utils.mkdirhier(repodir)
 +        bb.utils.mkdirhier(ud.repodir)
@@ -55,7 +56,7 @@ index 6b2efa2b91f8..d51d1ebf7a07 100644
  
          scmdata = ud.parm.get("scmdata", "")
          if scmdata == "keep":
-@@ -83,7 +82,12 @@ class Repo(FetchMethod):
+@@ -86,7 +85,12 @@ class Repo(FetchMethod):
              tar_flags = "--exclude='.repo' --exclude='.git'"
  
          # Create a cache
@@ -70,5 +71,5 @@ index 6b2efa2b91f8..d51d1ebf7a07 100644
      def supports_srcrev(self):
          return False
 -- 
-2.7.4
+2.17.1
 
