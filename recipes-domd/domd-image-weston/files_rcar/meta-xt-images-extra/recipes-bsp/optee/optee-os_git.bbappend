@@ -18,7 +18,6 @@ OPTEEFLAVOR_salvator-x-m3-xt = "salvator_m3"
 OPTEEFLAVOR_h3ulcb-xt = "salvator_h3"
 OPTEEFLAVOR_salvator-x-h3-xt = "salvator_h3"
 OPTEEFLAVOR_salvator-xs-h3-xt = "salvator_h3"
-OPTEEFLAVOR_salvator-xs-h3-2x2g-xt = "salvator_h3"
 
 OPTEEFLAVOR_salvator-x-h3-4x2g-xt = "salvator_h3_4x2g"
 OPTEEFLAVOR_salvator-xs-h3-4x2g-xt = "salvator_h3_4x2g"
