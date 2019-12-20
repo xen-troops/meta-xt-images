@@ -1,5 +1,5 @@
 require xen-common.inc
-LIC_FILES_CHKSUM = "file://COPYING;md5=bbb4b1bdc2c3b6743da3c39d03249095"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4295d895d4b5ce9d070263d52f030e49"
 
 XEN_REL = "4.13"
 PV = "${XEN_REL}.0+git${SRCPV}"
