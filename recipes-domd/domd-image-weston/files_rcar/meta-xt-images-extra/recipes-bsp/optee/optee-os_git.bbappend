@@ -5,7 +5,7 @@ SRC_URI = " git://github.com/xen-troops/optee_os.git"
 
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=c1f21c4f72f372ef38a5a4aee55ec173"
 
-SRCREV = "master"
+SRCREV = "4579fd7a66721bc5c7a4912c2e2a65e5684943cf"
 PV = "3.4.0+git${SRCPV}"
 
 OPTEEMACHINE = "rcar"
