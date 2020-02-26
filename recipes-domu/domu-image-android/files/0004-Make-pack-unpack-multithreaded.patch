@@ -1,23 +1,24 @@
-From 6526322512920e9b020fffe948100d024ee19774 Mon Sep 17 00:00:00 2001
-From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Date: Fri, 29 Dec 2017 17:26:49 +0200
-Subject: [PATCH 4/4] Make pack/unpack multithreaded
+From 7ce76e36b9325a9d70473f4e7fa4f5e6c8b09eba Mon Sep 17 00:00:00 2001
+From: Ruslan Shymkevych <ruslan_shymkevych@epam.com>
+Date: Wed, 26 Feb 2020 16:33:23 +0200
+Subject: [PATCH 4/5] Make pack/unpack multithreaded
 
 Use pigz/unpigz to make fetcher's pack/unpack tar
 run in parallel.
 
 Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 Signed-off-by: Artem Mygaiev <artem_mygaiev@epam.com>
+Signed-off-by: Ruslan Shymkevych <ruslan_shymkevych@epam.com>
 ---
  bitbake/lib/bb/fetch2/__init__.py | 2 +-
  bitbake/lib/bb/fetch2/repo.py     | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index b853da30bdbf..2a0f875dd394 100644
+index 03e56471d8..cb373bd210 100644
 --- a/bitbake/lib/bb/fetch2/__init__.py
 +++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -1398,7 +1398,7 @@ class FetchMethod(object):
+@@ -1430,7 +1430,7 @@ class FetchMethod(object):
  
          if unpack:
              if file.endswith('.tar'):
@@ -27,10 +28,10 @@ index b853da30bdbf..2a0f875dd394 100644
                  cmd = 'tar xz --no-same-owner -f %s' % file
              elif file.endswith('.tbz') or file.endswith('.tbz2') or file.endswith('.tar.bz2'):
 diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
-index 0ed0f923f6a4..adf437a24e32 100644
+index e43860e522..94841a1c81 100644
 --- a/bitbake/lib/bb/fetch2/repo.py
 +++ b/bitbake/lib/bb/fetch2/repo.py
-@@ -89,7 +89,7 @@ class Repo(FetchMethod):
+@@ -92,7 +92,7 @@ class Repo(FetchMethod):
              tar_flags = "--exclude='.repo' --exclude='.git'"
  
          # Create a cache
@@ -40,5 +41,5 @@ index 0ed0f923f6a4..adf437a24e32 100644
      def unpack(self, ud, destdir, d):
          FetchMethod.unpack(self, ud, destdir, d)
 -- 
-2.7.4
+2.17.1
 
