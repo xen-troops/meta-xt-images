@@ -13,7 +13,7 @@ PR = "r1"
 COMPATIBLE_MACHINE = "(r8a7795|r8a7796|r8a77965)"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PVRKM_URL ?= "git://github.com:xen-troops/pvr_km.git"
+PVRKM_URL ??= "PRVKM_URL is not set. Looks like incorrect settings."
 BRANCH ?= "master"
 
 SRC_URI = "${PVRKM_URL};protocol=ssh;branch=${BRANCH}"
