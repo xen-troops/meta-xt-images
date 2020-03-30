@@ -10,23 +10,18 @@ SRCREV = "${AUTOREV}"
 
 require inc/xt_shared_env.inc
 
-inherit java
 inherit pythonnative
 inherit xt_reconstruct
-
-JDK_VER = "openjdk-8-native"
 
 # remove all depends normally required for oe_make, e.g. cross-compiler
 # and tools: these are not needed for Android
 BASEDEPENDS = ""
 
-DEPENDS += "${JDK_VER} lz4-native bc-native python-pycrypto-native curl-native rsync-native bison-native"
+DEPENDS += "lz4-native bc-native python-pycrypto-native curl-native rsync-native bison-native coreutils-native unzip-native"
 
 ANDROID_PRODUCT ?= "aosp_arm64"
 ANDROID_VARIANT ?= "eng"
 SOC_FAMILY ?= "default"
-
-JAVA_HOME = "${STAGING_LIBDIR_JVM_NATIVE}/${JDK_VER}"
 
 ANDROID_OUT_DIR_COMMON_BASE = ""
 DDK_KM_PREBUILT_MODULE ?= ""
@@ -38,11 +33,12 @@ do_configure() {
 
 do_compile() {
     cd ${S}
+    USRBINPATH_NATIVE="${RECIPE_SYSROOT_NATIVE}/usr/bin"
 
     # run Android build in sane environment
     env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" USER="$USER" \
-           PATH="${JAVA_HOME}/bin:$PATH" \
-           JAVA_HOME="${JAVA_HOME}" OUT_DIR_COMMON_BASE="${ANDROID_OUT_DIR_COMMON_BASE}" \
+           PATH="${USRBINPATH_NATIVE}:${PATH}" \
+           OUT_DIR_COMMON_BASE="${ANDROID_OUT_DIR_COMMON_BASE}" \
            DDK_KM_PREBUILT_MODULE="${DDK_KM_PREBUILT_MODULE}" \
            TARGET_PREBUILT_KERNEL="${TARGET_PREBUILT_KERNEL}" \
            DDK_UM_PREBUILDS="${DDK_UM_PREBUILDS}" \
