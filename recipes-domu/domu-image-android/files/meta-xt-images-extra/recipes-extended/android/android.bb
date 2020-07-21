@@ -39,15 +39,24 @@ do_configure() {
 do_compile() {
     cd ${S}
 
-    # run Android build in sane environment
-    env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" USER="$USER" \
-           PATH="${JAVA_HOME}/bin:$PATH" \
-           JAVA_HOME="${JAVA_HOME}" OUT_DIR_COMMON_BASE="${ANDROID_OUT_DIR_COMMON_BASE}" \
+    if [ ! -f ${S}/.android_signature ]; then
+      # run Android build in sane environment
+      env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" USER="$USER" \
+           PATH="${USRBINPATH_NATIVE}:${PATH}" \
+           OUT_DIR_COMMON_BASE="${ANDROID_OUT_DIR_COMMON_BASE}" \
            DDK_KM_PREBUILT_MODULE="${DDK_KM_PREBUILT_MODULE}" \
            TARGET_PREBUILT_KERNEL="${TARGET_PREBUILT_KERNEL}" \
            DDK_UM_PREBUILDS="${DDK_UM_PREBUILDS}" \
+           bash -c "${ANDROID_CCACHE_BIN_DIR}/ccache -M ${ANDROID_CCACHE_SIZE_GB}G && \
+                    source build/envsetup.sh && \
            bash -c "source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
                     make ${EXTRA_OEMAKE} ${PARALLEL_MAKE} \
            "
+      build_signature=$(md5sum ${S}/Makefile)
+      echo ${build_signature} > ${S}/.android_signature
+   else
+      echo "${S}/.android_signature exists, no needs to rebuild."
+   fi
+
 }
