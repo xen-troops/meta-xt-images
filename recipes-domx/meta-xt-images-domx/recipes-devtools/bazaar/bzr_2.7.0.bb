@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "0d451227b705a0dd21d8408353fe7e44d3a5069e6c4c26e5f146f1314b
 DEPENDS = "python-native"
 PROVIDES += "bzr-native"
 
-inherit native pythonnative distutils
+inherit native ${@bb.utils.contains("BBFILE_COLLECTIONS", "meta-python2", "pythonnative distutils", "", d)}
 
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
