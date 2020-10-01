@@ -35,6 +35,8 @@ EXTRA_OEMAKE = "PLATFORM=rcar \
 	       CFG_SYSTEM_PTA=y \
 	       CFG_ASN1_PARSER=y \
 	       CFG_CORE_MBEDTLS_MPI=n \
+	       CFG_RPMB_FS=y \
+	       CFG_RPMB_WRITE_KEY=y \
 	       "
 
 do_configure() {
