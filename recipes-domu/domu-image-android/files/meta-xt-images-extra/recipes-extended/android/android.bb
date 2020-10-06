@@ -24,9 +24,15 @@ ANDROID_VARIANT ?= "eng"
 SOC_FAMILY ?= "default"
 
 ANDROID_OUT_DIR_COMMON_BASE = ""
-DDK_KM_PREBUILT_MODULE ?= ""
-TARGET_PREBUILT_KERNEL ?= ""
-DDK_UM_PREBUILDS ?= ""
+
+python __anonymous () {
+    prebuilt_vars = ["DDK_KM_PREBUILT_MODULE", "TARGET_PREBUILT_KERNEL", "DDK_UM_PREBUILDS"]
+    for var in prebuilt_vars:
+        if d.getVar(var, True) != None:
+            if not os.path.exists(d.getVar(var, True)):
+                raise bb.parse.SkipPackage('%s points to a non-existent path' % (var))
+            d.appendVar("DDK_PREBUILT_VARS", "%s=%s\n" % (var, d.getVar(var, True)))
+}
 
 do_configure() {
 }
@@ -39,9 +45,7 @@ do_compile() {
     env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" USER="$USER" \
            PATH="${USRBINPATH_NATIVE}:${PATH}" \
            OUT_DIR_COMMON_BASE="${ANDROID_OUT_DIR_COMMON_BASE}" \
-           DDK_KM_PREBUILT_MODULE="${DDK_KM_PREBUILT_MODULE}" \
-           TARGET_PREBUILT_KERNEL="${TARGET_PREBUILT_KERNEL}" \
-           DDK_UM_PREBUILDS="${DDK_UM_PREBUILDS}" \
+           ${DDK_PREBUILT_VARS} \
            bash -c "source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
                     make ${EXTRA_OEMAKE} ${PARALLEL_MAKE} \
