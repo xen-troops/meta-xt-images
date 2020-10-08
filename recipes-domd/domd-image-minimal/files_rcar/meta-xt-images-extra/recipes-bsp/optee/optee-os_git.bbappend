@@ -35,7 +35,7 @@ EXTRA_OEMAKE = "PLATFORM=rcar \
 	       CFLAGS64=--sysroot=${STAGING_DIR_HOST} \
 	       CFG_SYSTEM_PTA=y \
 	       CFG_ASN1_PARSER=y \
-	       CFG_CORE_MBEDTLS_MPI=n \
+	       CFG_CORE_MBEDTLS_MPI=y \
 	       "
 
 do_configure() {
