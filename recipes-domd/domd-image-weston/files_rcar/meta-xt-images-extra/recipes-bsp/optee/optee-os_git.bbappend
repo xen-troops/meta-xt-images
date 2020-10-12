@@ -6,6 +6,10 @@ PV = "git${SRCPV}"
 
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=c1f21c4f72f372ef38a5a4aee55ec173"
 
+inherit python3native
+DEPENDS_append = " python3-pycryptodome-native python3-pyelftools-native"
+DEPENDS_remove = " python-pycrypto-native"
+
 SRCREV = "${AUTOREV}"
 
 OPTEEMACHINE = "rcar"
@@ -34,7 +38,7 @@ EXTRA_OEMAKE = "PLATFORM=rcar \
 	       CFLAGS64=--sysroot=${STAGING_DIR_HOST} \
 	       CFG_SYSTEM_PTA=y \
 	       CFG_ASN1_PARSER=y \
-	       CFG_CORE_MBEDTLS_MPI=n \
+	       CFG_CORE_MBEDTLS_MPI=y \
 	       "
 
 do_configure() {
@@ -45,5 +49,5 @@ do_compile() {
 }
 
 do_deploy_append() {
-	install -m 0644 ${S}/out/arm-plat-${PLATFORM}/core/tee_raw.bin ${DEPLOYDIR}/tee_raw-${MACHINE}.bin
+	install -m 0644 ${S}/out/arm-plat-${PLATFORM}/core/tee-raw.bin ${DEPLOYDIR}/tee_raw-${MACHINE}.bin
 }
