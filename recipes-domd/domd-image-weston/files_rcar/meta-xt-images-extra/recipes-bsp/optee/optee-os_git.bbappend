@@ -6,7 +6,7 @@ PV = "git${SRCPV}"
 
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=c1f21c4f72f372ef38a5a4aee55ec173"
 
-SRCREV = "master"
+SRCREV = "${AUTOREV}"
 
 OPTEEMACHINE = "rcar"
 
