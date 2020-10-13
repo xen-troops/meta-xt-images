@@ -1,12 +1,12 @@
 # Prevent installing optee-os binaries into the image rootfs
 ALLOW_EMPTY_${PN} = "1"
 
-SRC_URI = " git://github.com/xen-troops/optee_os.git"
+SRC_URI = " git://github.com/xen-troops/optee_os.git;branch=3.4-xt"
 
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=c1f21c4f72f372ef38a5a4aee55ec173"
 
-SRCREV = "4579fd7a66721bc5c7a4912c2e2a65e5684943cf"
-PV = "3.4.0+git${SRCPV}"
+SRCREV = "${AUTOREV}"
+PV = "git${SRCPV}"
 
 OPTEEMACHINE = "rcar"
 
