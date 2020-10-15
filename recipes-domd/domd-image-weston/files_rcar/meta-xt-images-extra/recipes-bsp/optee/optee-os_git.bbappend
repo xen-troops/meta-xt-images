@@ -28,7 +28,7 @@ OPTEEFLAVOR_salvator-xs-h3-4x2g-xt = "salvator_h3_4x2g"
 OPTEEFLAVOR_h3ulcb-4x2g-xt = "salvator_h3_4x2g"
 OPTEEFLAVOR_h3ulcb-4x2g-kf-xt = "salvator_h3_4x2g"
 
-EXTRA_OEMAKE = "PLATFORM=rcar \
+EXTRA_OEMAKE += "PLATFORM=rcar \
 	       PLATFORM_FLAVOR=${OPTEEFLAVOR} \
 	       CFG_ARM64_core=y \
 	       CFG_VIRTUALIZATION=y \
