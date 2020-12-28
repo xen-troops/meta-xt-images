@@ -44,9 +44,12 @@ update_local_conf() {
 
     cd ${S}
 
-    # override what xt-distro wants as machine as we will only use
-    # machines understood by Poky
-    base_update_conf_value ${local_conf} MACHINE "qemux86-64"
+    # Android uses its own machine for its build, but we need to define
+    # some machine related settings that will be used by Yocto to create paths.
+    # Pay attention that this function makes weak assignment (??=).
+    # You can override this value by your own 'hard' assignment (=)
+    # in local.conf.domu-image-android for your product.
+    base_set_weak_conf_value ${local_conf} MACHINE "qemux86-64"
 
     if [ ! -z ${XT_ANDROID_PREBUILDS_DIR} ];then
         base_set_conf_value ${local_conf} DDK_KM_PREBUILT_MODULE "${XT_ANDROID_PREBUILDS_DIR}/pvr-km/pvrsrvkm.ko"
