@@ -4,7 +4,7 @@ require inc/domx-image-weston.inc
 
 # these layers will be added to bblayers.conf on do_configure
 XT_QUIRK_BB_ADD_LAYER += " \
-    meta-arm/meta-arm/recipes-sequrity \
+    meta-arm/meta-arm \
 "
 
 ################################################################################
