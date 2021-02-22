@@ -15,9 +15,17 @@ BUILD = "release"
 S = "${WORKDIR}/git"
 
 PVRUM_URL ?= "git://git@gitpct.epam.com/epmd-aepr/pvr_um_vgpu_img.git"
-SRC_URI_r8a7795 = "${PVRUM_URL};protocol=ssh;branch=${BRANCH}"
-SRC_URI_r8a7796 = "${PVRUM_URL};protocol=ssh;branch=${BRANCH}"
-SRC_URI_r8a77965 = "${PVRUM_URL};protocol=ssh;branch=${BRANCH}"
+WSEGL_URL ?= "git://git@gitpct.epam.com/epmd-aepr/wayland-wsegl.git"
+SRCREV_FORMAT ?= "1"
+
+PVRUM_WITH_WSEGL_URL = "${PVRUM_URL};protocol=ssh;branch=${BRANCH};name=pvr_um_vgpu_img \
+                        ${WSEGL_URL};protocol=ssh;destsuffix=${S}/wsegl/wayland-wsegl;branch=${BRANCH};name=wayland-wsegl \
+"
+
+SRC_URI_r8a7795 = "${PVRUM_WITH_WSEGL_URL}"
+SRC_URI_r8a7796 = "${PVRUM_WITH_WSEGL_URL}"
+SRC_URI_r8a77965 = "${PVRUM_WITH_WSEGL_URL}"
+
 PVRUM_BUILD_DIR_r8a7795 = "r8a7795_linux"
 PVRUM_BUILD_DIR_r8a7796 = "r8a7796_linux"
 PVRUM_BUILD_DIR_r8a77965 = "r8a77965_linux"
