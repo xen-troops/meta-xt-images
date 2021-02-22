@@ -1,8 +1,6 @@
 #Add Xen and additional packages to build
 IMAGE_INSTALL_append = " \
-    xen-base \
-    xen-flask \
-    xen-xenstat \
+    xen-tools \
     pulseaudio \
 "
 
