@@ -2,6 +2,8 @@
 ALLOW_EMPTY_${PN} = "1"
 
 SRC_URI = " git://github.com/xen-troops/optee_os.git"
+SRC_URI_remove = "file://change-cryptodome-to-crypto-module.patch"
+
 PV = "git${SRCPV}"
 
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=c1f21c4f72f372ef38a5a4aee55ec173"
