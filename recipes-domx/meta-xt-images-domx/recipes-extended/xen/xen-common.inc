@@ -73,7 +73,6 @@ SYSTEMD_SERVICE_${PN}-xencommons_remove += " \
 
 RDEPENDS_${PN}-efi = " \
     bash \
-    python \
     "
 
 FILES_${PN}-misc_append = "\
