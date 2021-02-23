@@ -118,7 +118,6 @@ FILES_${PN}-misc_append = "\
     ${libdir}/xen/bin/depriv-fd-checker \
     ${bindir}/vchan-socket-proxy \
     "
-RDEPENDS_${PN}-xenmon += "python"
 
 FILES_${PN}-xenmon = "\
     ${sbindir}/xenbaked \
