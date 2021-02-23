@@ -5,6 +5,8 @@ PREFERRED_VERSION_gles-module-egl-headers = "1.11"
 
 DEPENDS += " \
     clang-native \
+    python-native \
+    python-clang-native \
     wayland-protocols \
 "
 DEPENDS_remove = " \
