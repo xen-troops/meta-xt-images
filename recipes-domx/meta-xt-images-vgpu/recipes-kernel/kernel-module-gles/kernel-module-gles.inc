@@ -35,7 +35,7 @@ KERNEL_MODULE_PACKAGE_SUFFIX = ""
 KERNEL_MODULE_AUTOLOAD_append = " pvrsrvkm"
 
 KBUILD_DIR ?= "${S}/build/linux/${RCAR_TARGET}_linux"
-KBUILD_OUTDIR ?= "binary_${RCAR_TARGET}_linux_${BUILD}/target_aarch64/kbuild/"
+KBUILD_OUTDIR ?= "binary_${RCAR_TARGET}_linux_nullws_drm_${BUILD}/target_aarch64/kbuild/"
 
 EXTRA_OEMAKE += "KERNELDIR=${STAGING_KERNEL_BUILDDIR}"
 EXTRA_OEMAKE += "CROSS_COMPILE=${CROSS_COMPILE}"
