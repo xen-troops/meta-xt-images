@@ -62,6 +62,10 @@ RDEPENDS_${PN} = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'libgbm wayland-kms', '', d)} \
 "
 
+do_compile_prepend() {
+    export PATH="$PATH:${WORKDIR}/recipe-sysroot-native/usr/bin/python-native"
+}
+
 do_configure_prepend() {
     if [ -f ${WORKDIR}/Meta_Embedded_Toolkit-2.8.1.CentOS-5.tar.gz ]
     then
