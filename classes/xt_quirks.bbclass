@@ -32,9 +32,6 @@ def remove_tarfile(url, type, location, d):
 addtask unpack_xt_extras after do_unpack before do_configure
 python do_unpack_xt_extras() {
     bb.debug(1, "Unpacking Xen-troops extras")
-    # all the sources in SRC_URI have been unpacked already, clean it
-    d.setVar("SRC_URI", "")
-    # now deliver all the static extras into inner build system
     urls = (d.getVar("XT_QUIRK_UNPACK_SRC_URI") or "").split()
 
     # if we are reconstructing the build then populate saved recipe revisions
@@ -44,18 +41,24 @@ python do_unpack_xt_extras() {
         urls.append("file://" + "build-versions.inc" + ";subdir=repo/build/conf")
 
     for url in urls:
-        type, _, location, _, _, _ = bb.fetch.decodeurl(url)
-        item = check_url_or_pack(url, type, location, d) + " "
-        d.appendVar("SRC_URI", item or "")
+        try:
+            type, _, location, _, _, p = bb.fetch.decodeurl(url)
+            path = bb.fetch2.localpath(url, d)
+            bb.debug(1, "Make symbolic link for path:" + path)
+            rootdir = d.getVar('WORKDIR')
+            subdir = p['subdir']
 
-    # now call real unpacker to do the rest
-    bb.build.exec_func('base_do_unpack', d)
+            if subdir is not None:
+                location = os.path.join(subdir, location)
 
-    # remove the archives we created
-    urls = (d.getVar("XT_QUIRK_UNPACK_SRC_URI") or "").split()
-    for url in urls:
-        type, _, location, _, _, _ = bb.fetch.decodeurl(url)
-        remove_tarfile(url, type, location, d)
+            unpackdir = os.path.join(rootdir, subdir)
+            bb.utils.mkdirhier(unpackdir)
+            dest = os.path.join(rootdir, location)
+            if os.path.exists(dest):
+                os.remove(dest)
+            os.symlink(os.path.realpath(path), dest)
+        except BaseException as error:
+            bb.fatal("Failed to create link for path: {} error: {}".format(path, error))
 }
 
 python do_patch_prepend() {
