@@ -53,6 +53,8 @@ EXTRA_OEMAKE += "KERNELDIR=${STAGING_KERNEL_BUILDDIR}"
 EXTRA_OEMAKE += "METAG_INST_ROOT=${S}/metag/2.8"
 EXTRA_OEMAKE += "LLVM_BUILD_DIR=${STAGING_LIBDIR}/llvm_build_dir"
 EXTRA_OEMAKE += "PVRSRV_VZ_NUM_OSID=${XT_PVR_NUM_OSID}"
+EXTRA_OEMAKE += "BIN_DESTDIR=${bindir}"
+EXTRA_OEMAKE += "SHARE_DESTDIR=${datadir}"
 
 RDEPENDS_${PN} = " \
     kernel-module-gles \
@@ -117,8 +119,8 @@ FILES_${PN} = " \
     /lib/firmware/rgx.fw* \
     ${localedir}/bin/* \
     ${exec_prefix}/bin/* \
-    ${exec_prefix}/local/share/* \
-    ${exec_prefix}/local/bin/* \
+    ${datadir}/* \
+    ${bindir}/* \
 "
 
 FILES_${PN}-dev = " \
@@ -127,7 +129,7 @@ FILES_${PN}-dev = " \
 "
 
 FILES_${PN}-debug = " \
-    ${exec_prefix}/local/bin/dlcsrv_REL \
+    ${bindir}/dlcsrv_REL \
 "
 
 # Skip debug strip of do_populate_sysroot()
