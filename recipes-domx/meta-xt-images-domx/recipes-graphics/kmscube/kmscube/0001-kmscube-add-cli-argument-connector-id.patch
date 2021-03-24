@@ -1,0 +1,105 @@
+From 35af93719a965204f18a9c92ff76e9e93d35a57a Mon Sep 17 00:00:00 2001
+From: Valerii Chubar <valerii_chubar@epam.com>
+Date: Tue, 9 Feb 2021 23:14:06 +0200
+Subject: [PATCH] kmscube: add cli argument connector id
+
+Signed-off-by: Valerii Chubar <valerii_chubar@epam.com>
+Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+
+Command line argument --connector/-c was added.
+In current version connector id is selected the first active connection,
+but it is not usable when it is necessary to specify a screen
+---
+ drm-common.c | 6 ++++++
+ drm-common.h | 2 ++
+ kmscube.c    | 9 ++++++++-
+ 3 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/drm-common.c b/drm-common.c
+index b9d61c1..8ec3f40 100644
+--- a/drm-common.c
++++ b/drm-common.c
+@@ -238,6 +238,8 @@ int init_drm(struct drm *drm, const char *device, const char *mode_str, unsigned
+ 	for (i = 0; i < resources->count_connectors; i++) {
+ 		connector = drmModeGetConnector(drm->fd, resources->connectors[i]);
+ 		if (connector->connection == DRM_MODE_CONNECTED) {
++		        if(connector_id != -1 && connector_id != connector->connector_id)
++                          continue;
+ 			/* it's connected, let's use this! */
+ 			break;
+ 		}
+@@ -251,6 +253,10 @@ int init_drm(struct drm *drm, const char *device, const char *mode_str, unsigned
+ 		 */
+ 		printf("no connected connector!\n");
+ 		return -1;
++	}else if(connector_id != -1 && connector_id !=connector->connector_id){
++                printf("no such connector %d!\n", connector_id);
++                return -1;
++
+ 	}
+ 
+ 	/* find user requested mode: */
+diff --git a/drm-common.h b/drm-common.h
+index c4eb886..d132a86 100644
+--- a/drm-common.h
++++ b/drm-common.h
+@@ -30,6 +30,8 @@
+ struct gbm;
+ struct egl;
+ 
++int connector_id;
++
+ struct plane {
+ 	drmModePlane *plane;
+ 	drmModeObjectProperties *props;
+diff --git a/kmscube.c b/kmscube.c
+index 6a1c2af..8362049 100644
+--- a/kmscube.c
++++ b/kmscube.c
+@@ -41,7 +41,7 @@ static const struct egl *egl;
+ static const struct gbm *gbm;
+ static const struct drm *drm;
+ 
+-static const char *shortopts = "AD:M:m:V:v:";
++static const char *shortopts = "AD:M:m:V:v:c:";
+ 
+ static const struct option longopts[] = {
+ 	{"atomic", no_argument,       0, 'A'},
+@@ -52,6 +52,7 @@ static const struct option longopts[] = {
+ 	{"samples",  required_argument, 0, 's'},
+ 	{"video",  required_argument, 0, 'V'},
+ 	{"vmode",  required_argument, 0, 'v'},
++        {"connector",  required_argument, 0, 'c'},
+ 	{0, 0, 0, 0}
+ };
+ 
+@@ -72,6 +73,7 @@ static void usage(const char *name)
+ 			"    -s, --samples=N          use MSAA\n"
+ 			"    -V, --video=FILE         video textured cube\n"
+ 			"    -v, --vmode=VMODE        specify the video mode in the format\n"
++                        "    -c, --connector=N        connector id\n"
+ 			"                             <mode>[-<vrefresh>]\n",
+ 			name);
+ }
+@@ -91,6 +93,7 @@ int main(int argc, char *argv[])
+ 	unsigned int len;
+ 	unsigned int vrefresh = 0;
+ 
++        connector_id = -1;
+ #ifdef HAVE_GST
+ 	gst_init(&argc, &argv);
+ 	GST_DEBUG_CATEGORY_INIT(kmscube_debug, "kmscube", 0, "kmscube video pipeline");
+@@ -157,6 +160,10 @@ int main(int argc, char *argv[])
+ 			strncpy(mode_str, optarg, len);
+ 			mode_str[len] = '\0';
+ 			break;
++
++                case 'c':
++                        connector_id = strtol(optarg, NULL, 0);
++                        break;
+ 		default:
+ 			usage(argv[0]);
+ 			return -1;
+-- 
+2.17.1
+
