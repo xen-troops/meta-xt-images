@@ -9,4 +9,5 @@ XT_QUIRK_UNPACK_SRC_URI += " \
 # these layers will be added to bblayers.conf on do_configure
 XT_QUIRK_BB_ADD_LAYER += " \
     meta-xt-images-vgpu \
+    meta-arm/meta-arm \
 "
