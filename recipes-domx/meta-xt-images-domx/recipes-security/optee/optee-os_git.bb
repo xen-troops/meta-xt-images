@@ -61,6 +61,16 @@ do_compile() {
 	oe_runmake
 }
 
+OPTEE_ARCH_aarch64 = "arm64"
+
+do_install () {
+    install -d ${D}/usr/include/optee/export-user_ta_${OPTEE_ARCH}/
+
+    for f in ${S}/out/arm-plat-rcar/export-ta_${OPTEE_ARCH}/*; do
+        cp -aR $f ${D}/usr/include/optee/export-user_ta_${OPTEE_ARCH}/
+    done
+}
+
 do_deploy() {
     # Create deploy folder
     install -d ${DEPLOYDIR}
@@ -75,3 +85,4 @@ do_deploy() {
 addtask deploy before do_build after do_compile
 
 FILES_${PN} = ""
+FILES_${PN}-staticdev = "/usr/include/optee/"
