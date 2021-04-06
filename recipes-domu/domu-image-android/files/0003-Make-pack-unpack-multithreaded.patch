@@ -1,23 +1,26 @@
-From 6526322512920e9b020fffe948100d024ee19774 Mon Sep 17 00:00:00 2001
-From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Date: Fri, 29 Dec 2017 17:26:49 +0200
-Subject: [PATCH 4/4] Make pack/unpack multithreaded
+From a6f3dcd07ce5c339c25bd7f84ccfcffc7e245586 Mon Sep 17 00:00:00 2001
+From: Ruslan Shymkevych <ruslan_shymkevych@epam.com>
+Date: Tue, 6 Apr 2021 17:04:18 +0300
+Subject: [PATCH 3/4] Make pack/unpack multithreaded
 
 Use pigz/unpigz to make fetcher's pack/unpack tar
 run in parallel.
 
+This patch is rebased to dunfell.
+
 Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 Signed-off-by: Artem Mygaiev <artem_mygaiev@epam.com>
+Signed-off-by: Ruslan Shymkevych <ruslan_shymkevych@epam.com>
 ---
  bitbake/lib/bb/fetch2/__init__.py | 2 +-
  bitbake/lib/bb/fetch2/repo.py     | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index b853da30bdbf..2a0f875dd394 100644
+index dc99914cd9..e3e5cfacd0 100644
 --- a/bitbake/lib/bb/fetch2/__init__.py
 +++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -1398,7 +1398,7 @@ class FetchMethod(object):
+@@ -1445,7 +1445,7 @@ class FetchMethod(object):
  
          if unpack:
              if file.endswith('.tar'):
@@ -27,10 +30,10 @@ index b853da30bdbf..2a0f875dd394 100644
                  cmd = 'tar xz --no-same-owner -f %s' % file
              elif file.endswith('.tbz') or file.endswith('.tbz2') or file.endswith('.tar.bz2'):
 diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
-index 0ed0f923f6a4..adf437a24e32 100644
+index ed3482a41a..fabd18c3ef 100644
 --- a/bitbake/lib/bb/fetch2/repo.py
 +++ b/bitbake/lib/bb/fetch2/repo.py
-@@ -89,7 +89,7 @@ class Repo(FetchMethod):
+@@ -73,7 +73,7 @@ class Repo(FetchMethod):
              tar_flags = "--exclude='.repo' --exclude='.git'"
  
          # Create a cache
@@ -40,5 +43,5 @@ index 0ed0f923f6a4..adf437a24e32 100644
      def unpack(self, ud, destdir, d):
          FetchMethod.unpack(self, ud, destdir, d)
 -- 
-2.7.4
+2.17.1
 

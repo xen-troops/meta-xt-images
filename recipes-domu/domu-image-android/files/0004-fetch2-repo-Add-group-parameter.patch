@@ -1,0 +1,37 @@
+From f030ec84b8b8a4dd82bc54d71fc6158231fa319b Mon Sep 17 00:00:00 2001
+From: Ruslan Shymkevych <ruslan_shymkevych@epam.com>
+Date: Tue, 6 Apr 2021 17:21:44 +0300
+Subject: [PATCH 4/4] fetch2/repo: Add group parameter
+
+This allow us to build Android domain with linux kernel
+and graphic from sources.
+
+This patch is rebased to dunfell.
+
+Signed-off-by: Andrii Chepurnyi <andrii_chepurnyi@epam.com>
+Signed-off-by: Iurii Artemenko <iurii_artemenko@epam.com>
+Signed-off-by: Ruslan Shymkevych <ruslan_shymkevych@epam.com>
+---
+ bitbake/lib/bb/fetch2/repo.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
+index fabd18c3ef..dc10db40eb 100644
+--- a/bitbake/lib/bb/fetch2/repo.py
++++ b/bitbake/lib/bb/fetch2/repo.py
+@@ -61,7 +61,11 @@ class Repo(FetchMethod):
+ 
+         bb.utils.mkdirhier(ud.repodir)
+         bb.fetch2.check_network_access(d, "%s init -m %s -b %s -u %s://%s%s%s" % (ud.basecmd, ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), ud.url)
+-        runfetchcmd("%s init -m %s -b %s -u %s://%s%s%s" % (ud.basecmd, ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=ud.repodir)
++        prebuilds = d.getVar("DDK_UM_PREBUILDS") or ""
++        if prebuilds:
++            runfetchcmd("%s init -m %s -b %s -u %s://%s%s%s" % (ud.basecmd, ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=ud.repodir)
++        else:
++            runfetchcmd("%s init -m %s -b %s -u %s://%s%s%s -g %s" % (ud.basecmd, ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path, "all"), d, workdir=ud.repodir)
+ 
+         bb.fetch2.check_network_access(d, "%s sync %s" % (ud.basecmd, ud.url), ud.url)
+         runfetchcmd("%s sync" % ud.basecmd, d, workdir=ud.repodir)
+-- 
+2.17.1
+
