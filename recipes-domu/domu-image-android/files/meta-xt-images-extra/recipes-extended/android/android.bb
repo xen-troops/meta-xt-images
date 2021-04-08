@@ -10,14 +10,14 @@ SRCREV = "${AUTOREV}"
 
 require inc/xt_shared_env.inc
 
-inherit pythonnative
+inherit python3native
 inherit xt_reconstruct
 
 # remove all depends normally required for oe_make, e.g. cross-compiler
 # and tools: these are not needed for Android
 BASEDEPENDS = ""
 
-DEPENDS += "lz4-native bc-native python-pycrypto-native curl-native rsync-native bison-native coreutils-native unzip-native zip-native"
+DEPENDS += "lz4-native bc-native python3-pycrypto-native curl-native rsync-native bison-native coreutils-native unzip-native zip-native"
 
 ANDROID_PRODUCT ?= "aosp_arm64"
 ANDROID_VARIANT ?= "eng"
