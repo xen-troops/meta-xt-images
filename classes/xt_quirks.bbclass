@@ -83,3 +83,6 @@ python do_xt_config_reconstruct() {
     with open(conf_file, "a") as f:
         f.write("require" + " " + "build-versions.inc" + "\n")
 }
+
+do_configure[nostamp] = "1"
+do_compile[nostamp] = "1"
