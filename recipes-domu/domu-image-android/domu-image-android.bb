@@ -24,14 +24,19 @@ require inc/xt_shared_env.inc
 # 'directpath=1' is used to suppress creation of subfolders to ${REPODIR}.
 #           This is required for correct work of do_compile() with downloaded sources.
 
-REPODIR = "${SSTATE_DIR}/../android_sources"
-S = "${REPODIR}"
-
 ANDROID_SOURCES = "repo://github.com/xen-troops/android_manifest;protocol=https;branch=android-11-master;manifest=doma.xml;depth=1;directpath=1"
 
-# here we handle prebuild related things
 python __anonymous () {
-    # Depending on XT_ANDROID_PREBUILDS_DIR we either use proprietary sources or use prebuilt graphics
+    # If we are provided with existing android sources then no fetching is required
+    if d.getVar("XT_EXTERNAL_ANDROID_SOURCES", expand=True):
+        # We do not use REPODIR in this case
+        d.setVar("S", "${XT_EXTERNAL_ANDROID_SOURCES}")
+        d.setVarFlag("do_fetch", "noexec", "1")
+    else:
+        d.setVar("REPODIR", "${SSTATE_DIR}/../android_sources")
+        d.setVar("S", "${REPODIR}")
+
+    # We either use proprietary sources or use prebuilt graphics
     if d.getVar("XT_ANDROID_PREBUILDS_DIR", expand=True):
         DDK_KM_PREBUILT_MODULE = "${XT_ANDROID_PREBUILDS_DIR}/pvr-km/pvrsrvkm.ko"
         DDK_UM_PREBUILDS = "${XT_ANDROID_PREBUILDS_DIR}/pvr-um/"
