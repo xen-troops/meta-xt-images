@@ -24,8 +24,15 @@ require inc/xt_shared_env.inc
 # 'directpath=1' is used to suppress creation of subfolders to ${REPODIR}.
 #           This is required for correct work of do_compile() with downloaded sources.
 
-REPODIR = "${SSTATE_DIR}/../android_sources"
-S = "${REPODIR}"
+python __anonymous () {
+    # If we provide existing android sources then no fetching is required
+    if d.getVar("XT_EXTERNAL_ANDROID_SOURCES", expand=True):
+        d.setVar("S", "${XT_EXTERNAL_ANDROID_SOURCES}")
+        d.setVarFlag("do_fetch", "noexec", "1")
+    else:
+        d.setVar("REPODIR", "${SSTATE_DIR}/../android_sources")
+        d.setVar("S", "${REPODIR}")
+}
 
 # depth=1 reduce fetch time in half: ~(10-14)min instead of 23min
 SRC_URI = "repo://github.com/xen-troops/android_manifest;protocol=https;branch=android-11-master;manifest=doma.xml;depth=1;directpath=1"
