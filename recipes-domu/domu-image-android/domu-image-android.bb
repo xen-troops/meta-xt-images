@@ -77,10 +77,6 @@ python __anonymous () {
             d.appendVar("PREBUILT_VARS", "%s=%s\n" % (var, d.getVar(var, True)))
 }
 
-# Note, that there is no need to set OUT_DIR_COMMON_BASE as
-# it is used as fallback option in case OUT_DIR is not set.
-OUT_DIR = "${SSTATE_DIR}/../${ANDROID_PRODUCT}-${SOC_FAMILY}"
-
 # This is important workaround.
 # Host python is used to build proper trusted application (TA) for OP-TEE.
 # We can't use android's python because we can't install required library into it.
@@ -104,7 +100,6 @@ do_compile() {
     # Pay attention: EXTRA_OEMAKE includes multithread option '-j' (see poky sources)
     env -i HOME="$HOME" USER="$USER" \
            PATH="${USRBINPATH_NATIVE}:${PATH}" \
-           OUT_DIR="${OUT_DIR}" \
            ${PREBUILT_VARS} \
            bash -c "source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
@@ -120,7 +115,7 @@ do_install() {
     install -d "${XT_DIR_ABS_SHARED_BOOT_DOMA}"
 
     # copy images to the deploy directory
-    find "${OUT_DIR}/target/product/${ANDROID_PRODUCT}" -maxdepth 1 -iname '*.img' -exec \
+    find "${S}/out/target/product/${ANDROID_PRODUCT}" -maxdepth 1 -iname '*.img' -exec \
         cp -f --no-dereference --preserve=links {} "${DEPLOY_DIR}/${BPN}/images" \;
 
     # TODO assemble android's images into single image
