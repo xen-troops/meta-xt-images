@@ -119,8 +119,8 @@ FILES_${PN} = " \
     /lib/firmware/rgx.fw* \
     ${localedir}/bin/* \
     ${exec_prefix}/bin/* \
-    ${datadir}/* \
-    ${bindir}/* \
+    ${@bb.utils.contains('PREFERRED_PROVIDER_gles-user-module', 'rcar-proprietary-graphic', '${exec_prefix}/local/share/* ', '${datadir}/* ', d) } \
+    ${@bb.utils.contains('PREFERRED_PROVIDER_gles-user-module', 'rcar-proprietary-graphic', '${exec_prefix}/local/bin/* ',   '${bindir}/* ',d ) } \
 "
 
 FILES_${PN}-dev = " \
@@ -129,7 +129,7 @@ FILES_${PN}-dev = " \
 "
 
 FILES_${PN}-debug = " \
-    ${bindir}/dlcsrv_REL \
+    ${@bb.utils.contains('PREFERRED_PROVIDER_gles-user-module', 'rcar-proprietary-graphic', '${exec_prefix}/local/bin/dlcsrv_REL ', '${bindir}/dlcsrv_REL ',d ) } \
 "
 
 # Skip debug strip of do_populate_sysroot()
