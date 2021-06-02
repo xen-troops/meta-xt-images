@@ -2,7 +2,7 @@ SUMMARY = "Base for Android build"
 
 LICENSE = "MIT"
 
-require inc/xt_shared_env.inc
+require recipes-domx/meta-xt-prod-domx/inc/xt_shared_env.inc
 
 # Important note.
 # We use REPODIR and SRC_URI with 'directpath=1' to bypass fetcher's
