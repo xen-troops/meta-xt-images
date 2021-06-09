@@ -17,7 +17,7 @@ KMETA = "kernel-meta"
 LINUX_KERNEL_TYPE = "tiny"
 LINUX_VERSION ?= "4.14.0"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
+LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
