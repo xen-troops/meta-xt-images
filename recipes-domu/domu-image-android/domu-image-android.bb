@@ -102,11 +102,22 @@ do_compile() {
     cd ${S}
     USRBINPATH_NATIVE="${RECIPE_SYSROOT_NATIVE}/usr/bin"
 
+    # If VIS is enabled, android will use external
+    # VIS server, otherwise - emulated vehicle HAL.
+    # This option is controlled on android side by
+    # environment variable XT_USE_VIS_SERVER.
+    # It need to be defined or not defined,
+    # it's value is not used for now.
+    if [ -n "${XT_USE_VIS_SERVER}" ]; then
+        ENABLE_VIS_SERVER="XT_USE_VIS_SERVER=true"
+    fi
+
     # run Android build in sane environment
     # Pay attention: EXTRA_OEMAKE includes multithread option '-j' (see poky sources)
     env -i HOME="$HOME" USER="$USER" \
            PATH="${USRBINPATH_NATIVE}:${PATH}" \
            ${PREBUILT_VARS} \
+           ${ENABLE_VIS_SERVER} \
            bash -c "source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
                     make ${EXTRA_OEMAKE} \
