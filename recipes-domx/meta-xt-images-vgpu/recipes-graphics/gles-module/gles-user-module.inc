@@ -10,6 +10,10 @@ DEPENDS = " \
     virtual/kernel \
     wayland-kms \
     llvmpvr \
+    indent-native \
+    bison-native \
+    python-clang-native \
+    python-native \
 "
 
 PN = "gles-user-module"
