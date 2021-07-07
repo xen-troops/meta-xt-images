@@ -10,7 +10,7 @@ inherit python3native
 DEPENDS_append = " python3-pycryptodome-native python3-pyelftools-native"
 DEPENDS_remove = " python-pycrypto-native"
 
-SRCREV = "${AUTOREV}"
+SRCREV = "dcec4b70f34a387ec0445728295873f19fab6e35"
 
 OPTEEMACHINE = "rcar"
 
