@@ -16,7 +16,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PVRKM_URL ?= "git://github.com:xen-troops/pvr_km.git"
 BRANCH ?= "master"
 
-SRC_URI = "${PVRKM_URL};protocol=ssh;branch=${BRANCH}"
+SRC_URI = "${PVRKM_URL};protocol=ssh;branch=${BRANCH};protocol=https"
 
 S = "${WORKDIR}/git"
 B = "${KBUILD_DIR}"
