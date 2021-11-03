@@ -7,7 +7,7 @@ inherit deploy python3native
 DEPENDS = "python3-pycryptodome-native python3-pyelftools-native"
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://github.com/xen-troops/optee_os.git;branch=3.9-xt-linux"
+SRC_URI = "git://github.com/xen-troops/optee_os.git;branch=3.9-xt-linux;protocol=https"
 PV = "git${SRCPV}"
 SRCREV = "${AUTOREV}"
 
