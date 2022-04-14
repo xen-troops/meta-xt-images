@@ -40,7 +40,14 @@ python __anonymous () {
         d.setVar("S", "${REPODIR}")
 
     # We either use proprietary sources or use prebuilt graphics
-    if d.getVar("XT_ANDROID_PREBUILDS_DIR", expand=True:
+    path = d.getVar("XT_ANDROID_PREBUILDS_DIR", expand=True)
+    if path:
+        files = glob.glob(path + "/*doma*.tar.gz")
+        if len(files) == 0:
+            raise bb.parse.SkipPackage('There is not any *doma*.tar.gz in %s' % (path))
+        tar = tarfile.open(files[0], "r:gz")
+        tar.extractall(path)
+        tar.close()
         d.setVar("DDK_KM_PREBUILT_MODULE", "${XT_ANDROID_PREBUILDS_DIR}/pvr-km/pvrsrvkm.ko")
         d.setVar("DDK_UM_PREBUILDS", "${XT_ANDROID_PREBUILDS_DIR}/pvr-um/")
     else:
