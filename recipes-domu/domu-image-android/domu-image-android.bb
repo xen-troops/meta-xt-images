@@ -27,6 +27,9 @@ require recipes-domx/meta-xt-prod-domx/inc/xt_shared_env.inc
 ANDROID_SOURCES = "repo://github.com/xen-troops/android_manifest;protocol=https;branch=android-11-master;manifest=doma.xml;depth=1;directpath=1"
 
 python __anonymous () {
+    import tarfile
+    import glob
+
     # If we are provided with existing android sources then no fetching is required
     if d.getVar("XT_EXTERNAL_ANDROID_SOURCES", expand=True):
         # We do not use REPODIR in this case
@@ -37,9 +40,9 @@ python __anonymous () {
         d.setVar("S", "${REPODIR}")
 
     # We either use proprietary sources or use prebuilt graphics
-    if d.getVar("XT_ANDROID_PREBUILDS_DIR", expand=True):
-        DDK_KM_PREBUILT_MODULE = "${XT_ANDROID_PREBUILDS_DIR}/pvr-km/pvrsrvkm.ko"
-        DDK_UM_PREBUILDS = "${XT_ANDROID_PREBUILDS_DIR}/pvr-um/"
+    if d.getVar("XT_ANDROID_PREBUILDS_DIR", expand=True:
+        d.setVar("DDK_KM_PREBUILT_MODULE", "${XT_ANDROID_PREBUILDS_DIR}/pvr-km/pvrsrvkm.ko")
+        d.setVar("DDK_UM_PREBUILDS", "${XT_ANDROID_PREBUILDS_DIR}/pvr-um/")
     else:
         # groups=all results in fetching of proprietary projects
         d.appendVar("ANDROID_SOURCES", ";groups=all")
@@ -48,7 +51,7 @@ python __anonymous () {
     for var in prebuilt_vars:
         if d.getVar(var, True) != None:
             if not os.path.exists(d.getVar(var, True)):
-                raise bb.parse.SkipPackage('%s points to a non-existent path' % (var))
+                raise bb.parse.SkipPackage('%s points to a non-existent path %s' % (var, d.getVar(var, True)))
             d.appendVar("PREBUILT_VARS", "%s=%s\n" % (var, d.getVar(var, True)))
 }
 
@@ -101,15 +104,13 @@ do_compile[nostamp] = "1"
 do_compile() {
     cd ${S}
     USRBINPATH_NATIVE="${RECIPE_SYSROOT_NATIVE}/usr/bin"
-
     # run Android build in sane environment
     # Pay attention: EXTRA_OEMAKE includes multithread option '-j' (see poky sources)
     env -i HOME="$HOME" USER="$USER" \
            PATH="${USRBINPATH_NATIVE}:${PATH}" \
-           ${PREBUILT_VARS} \
            bash -c "source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
-                    make ${EXTRA_OEMAKE} \
+                    make ${EXTRA_OEMAKE} ${PREBUILT_VARS} \
            "
 }
 
