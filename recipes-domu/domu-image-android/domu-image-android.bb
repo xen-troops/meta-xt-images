@@ -38,8 +38,8 @@ python __anonymous () {
 
     # We either use proprietary sources or use prebuilt graphics
     if d.getVar("XT_ANDROID_PREBUILDS_DIR", expand=True):
-        DDK_KM_PREBUILT_MODULE = "${XT_ANDROID_PREBUILDS_DIR}/pvr-km/pvrsrvkm.ko"
-        DDK_UM_PREBUILDS = "${XT_ANDROID_PREBUILDS_DIR}/pvr-um/"
+        d.setVar("DDK_KM_PREBUILT_MODULE", "${XT_ANDROID_PREBUILDS_DIR}/pvr-km/pvrsrvkm.ko")
+        d.setVar("DDK_UM_PREBUILDS", "${XT_ANDROID_PREBUILDS_DIR}/pvr-um")
     else:
         # groups=all results in fetching of proprietary projects
         d.appendVar("ANDROID_SOURCES", ";groups=all")
@@ -49,7 +49,7 @@ python __anonymous () {
         if d.getVar(var, True) != None:
             if not os.path.exists(d.getVar(var, True)):
                 raise bb.parse.SkipPackage('%s points to a non-existent path' % (var))
-            d.appendVar("PREBUILT_VARS", "%s=%s\n" % (var, d.getVar(var, True)))
+            d.appendVar("EXTRA_OEMAKE", "%s=%s " % (var, d.getVar(var, True)))
 }
 
 SRC_URI = "${ANDROID_SOURCES}"
@@ -106,7 +106,6 @@ do_compile() {
     # Pay attention: EXTRA_OEMAKE includes multithread option '-j' (see poky sources)
     env -i HOME="$HOME" USER="$USER" \
            PATH="${USRBINPATH_NATIVE}:${PATH}" \
-           ${PREBUILT_VARS} \
            bash -c "source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
                     make ${EXTRA_OEMAKE} \
