@@ -23,7 +23,6 @@ ANDROID_PRODUCT ?= "aosp_arm64"
 ANDROID_VARIANT ?= "eng"
 SOC_FAMILY ?= "default"
 
-ANDROID_OUT_DIR_COMMON_BASE = ""
 
 python __anonymous () {
     prebuilt_vars = ["DDK_KM_PREBUILT_MODULE", "TARGET_PREBUILT_KERNEL", "DDK_UM_PREBUILDS"]
@@ -44,7 +43,6 @@ do_compile() {
     # run Android build in sane environment
     env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" USER="$USER" \
            PATH="${USRBINPATH_NATIVE}:${PATH}" \
-           OUT_DIR_COMMON_BASE="${ANDROID_OUT_DIR_COMMON_BASE}" \
            ${DDK_PREBUILT_VARS} \
            bash -c "source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
