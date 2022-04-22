@@ -30,7 +30,7 @@ python __anonymous () {
         if d.getVar(var, True) != None:
             if not os.path.exists(d.getVar(var, True)):
                 raise bb.parse.SkipPackage('%s points to a non-existent path' % (var))
-            d.appendVar("DDK_PREBUILT_VARS", "%s=%s\n" % (var, d.getVar(var, True)))
+            d.appendVar("EXTRA_OEMAKE", "%s=%s " % (var, d.getVar(var, True)))
 }
 
 do_configure() {
@@ -43,7 +43,6 @@ do_compile() {
     # run Android build in sane environment
     env -i HOME="$HOME" LC_CTYPE="${LC_ALL:-${LC_CTYPE:-$LANG}}" USER="$USER" \
            PATH="${USRBINPATH_NATIVE}:${PATH}" \
-           ${DDK_PREBUILT_VARS} \
            bash -c "source build/envsetup.sh && \
                     lunch ${ANDROID_PRODUCT}-${ANDROID_VARIANT} && \
                     make ${EXTRA_OEMAKE} ${PARALLEL_MAKE} \
